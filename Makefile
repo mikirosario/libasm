@@ -3,22 +3,33 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mrosario <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/03 22:07:44 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/09 22:15:19 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = test
+NAME = libasm.a
 
-SRC = test.s
+TEST = a.out
+
+# SRC = test.s
+
+SRC = helloworld.s test.s ft_strlen.s
 
 OBJ = $(SRC:.s=.o)
 
-$(NAME):
-	nasm -f macho64 $(SRC) -o $(OBJ)
-	ld -macosx_version_min 10.7.0 -no_pie -o test test.o
+FLAGS = -Wall -Werror -Wextra
+
+%.o: %.s
+	nasm -f macho64 $<
+
+$(NAME): $(OBJ)
+	ar rcs $(NAME) $(OBJ)
+	gcc $(FLAGS) -L ./ -lasm -o $(TEST) main.c
+
+#ld -macosx_version_min 10.14.5 -no_pie -o test $(OBJ) -lSystem
 
 all: $(NAME)
 
@@ -26,4 +37,6 @@ clean:
 	rm -f *.o
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(TEST)
+
+.PHONY: clean fclean
