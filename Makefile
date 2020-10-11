@@ -6,7 +6,7 @@
 #    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/09 22:15:19 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/11 21:18:54 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ TEST = a.out
 
 # SRC = test.s
 
-SRC = helloworld.s test.s ft_strlen.s
+SRC = helloworld.s test.s ft_strlen.s ft_write.s
 
 OBJ = $(SRC:.s=.o)
 
