@@ -68,18 +68,17 @@ FT_WRITE
 		; flag to 1 if syscall fails, rather than returning a negative number
 		; like a normal operating system. ;p We indulge the idiosynscrasy.
 		; The MacOS function for getting the errno variable address is __error.
-		; It's stored in rax.
+		; When called, the desired address is passed to rax.
 extern ___error
 global _ft_write
 
 section .text
 	
 	_ft_write:
-		cmp edx, 0			; Compare len with 0.
-
-		jl reterror			; If len is less than 0, jump to reterror.
-
+		_ft_write:
 		mov	rax, 0x2000004	; The code for the write syscall in MacOS.
+
+		clc					; Clear the Carry Flag.
 
 		syscall				; Do it! Apparently, it already knows where to get
 							; the parameters per the calling convention. Less
@@ -92,13 +91,14 @@ section .text
 							; Unless...
 	
 	error:
-		push rax			; I need to test this, but if I understand this
-							; right, MacOS, following BSD convention, returns
-							; the errno on failure, as indicated by the Carry
-							; Flag, so I can just pass it right into the errno
-							; variable.
+		push rax			; MacOS, following BSD convention, returns
+							; the errno on failure (into rax), as indicated by
+							; the Carry Flag, so I can just pass it right into
+							; the errno variable. (In Linux a negative errno
+							; is passed, and needs to be made positive before
+							; passing to errno, and the Carry Flag isn't used).
 							;
-							; First I push it onto the stack so it is safe from
+							; First I push rax onto the stack so it is safe from
 							; what __error is about to do to my registers...
 
 		call ___error		; rax should now have the pointer to errno.
@@ -106,11 +106,14 @@ section .text
 		pop rbx				; Let's get the syscall return value back, into rbx
 							; this time.
 
-		mov [eax], ebx		; As I understand, errno is a 32 bit int, so I'll
-							; pass it as such.
+		mov [rax], ebx		; As I understand, errno is a 32 bit int, so I'll
+							; pass the errno value as such. Note, even though
+							; errno is a 32 bit int, its pointer is still a 64
+							; bit pointer, natch. ;)
 
 	reterror:		
 		mov rax, -1			; Now we just return -1 to unhelpfully indicate an
-							; error. Go look at errno if you want more info. :p
+							; error to the user. Go look at errno or use perror
+							; if you want more info, pitiful user. Mwahahaha. :p
 
 		ret					; Bye!

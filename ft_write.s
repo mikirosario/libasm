@@ -3,19 +3,16 @@ global _ft_write
 
 section .text
 	_ft_write:
-		cmp edx, 0
-		jl reterror
 		mov	rax, 0x2000004
+		clc
 		syscall
-		jc error ; en MacOSX, si syscall tira error pone Carry Flag a 1 :p
+		jc error
 		ret
 	
 	error:
 		push rax
 		call ___error
 		pop rbx
-		mov [eax], ebx
-	
-	reterror:
+		mov [rax], ebx
 		mov rax, -1
 		ret

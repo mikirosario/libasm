@@ -6,7 +6,7 @@
 #    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/11 21:18:54 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/12 20:21:19 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,5 +38,7 @@ clean:
 
 fclean: clean
 	rm -f $(NAME) $(TEST)
+
+re: fclean all
 
 .PHONY: clean fclean
