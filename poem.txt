@@ -1,0 +1,6 @@
+Mi fichero inventado
+Pa probar mi ft_read
+Necesita mi get_next
+Libft he de incluir
+
+- Miki, el poeta, 2020
