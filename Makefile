@@ -3,26 +3,50 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mrosario <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/03 22:07:44 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/14 15:54:21 by miki             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = test
+NAME = libasm.a
 
-SRC = test.s
+UNAME := $(shell uname)
 
-LSRC = linux_test.s
+TEST = a.out
 
+# SRC = test.s
+
+SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s
+
+LSRC = helloworld.s ft_strlen.s ft_write_linux.s
+
+FLAGS = -o $(TEST) -Wall -Werror -Wextra
+
+ifeq ($(UNAME), Darwin)
 OBJ = $(SRC:.s=.o)
+%.o: %.s
+	nasm -f macho64 $<
+endif
+	
+ifeq ($(UNAME), Linux)
+OBJ = $(LSRC:.s=.o)
+%.o: %.s
+	nasm -f elf64 $<
+endif
 
-LOBJ = $(LSRC:.s=.o)
+$(LIBFT):
+	make -C ./libft
+	make clean -C ./libft
 
-$(NAME):
-	nasm -f macho64 $(SRC) -o $(OBJ)
-	ld -macosx_version_min 10.7.0 -no_pie -o test test.o
+$(NAME): $(OBJ)
+	ar rcs $(NAME) $(OBJ)
+	make -C ./libft
+	make clean -C ./libft
+	gcc $(FLAGS) -I ./libft/ -L ./ -lasm -L ./libft/ -lft -o $(TEST) main.c 
+
+#ld -macosx_version_min 10.14.5 -no_pie -o test $(OBJ) -lSystem
 
 linux:
 	nasm -f elf64 $(LSRC) -o $(LOBJ)
@@ -34,4 +58,9 @@ clean:
 	rm -f *.o
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(TEST)
+	make fclean -C ./libft
+
+re: fclean all
+
+.PHONY: clean fclean re
