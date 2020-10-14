@@ -1,6 +1,6 @@
 Mi fichero inventado
 Pa probar mi ft_read
-Necesita mi get_next
-Libft he de incluir
+Qué bonito ha quedado
+Ni hubo que usar free
 
 - Miki, el poeta, 2020

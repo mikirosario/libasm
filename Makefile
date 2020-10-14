@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
+#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/14 15:54:21 by miki             ###   ########.fr        #
+#    Updated: 2020/10/14 22:51:36 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ TEST = a.out
 
 # SRC = test.s
 
-SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s
+SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s ft_strcmp.s
 
 LSRC = helloworld.s ft_strlen.s ft_write_linux.s
 
