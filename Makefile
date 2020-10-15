@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
+#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/15 04:11:08 by miki             ###   ########.fr        #
+#    Updated: 2020/10/15 22:35:21 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,19 +18,19 @@ TEST = a.out
 
 # SRC = test.s
 
-SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s ft_strcmp.s
+SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s
 
 LSRC = ft_write_linux.s ft_read_linux.s ft_strlen_linux.s
 
-FLAGS = -o $(TEST) -Wall -Werror -Wextra -no-pie
-
 ifeq ($(UNAME), Darwin)
+FLAGS = -o $(TEST) -Wall -Werror -Wextra
 OBJ = $(SRC:.s=.o)
 %.o: %.s
 	nasm -f macho64 $<
 endif
 	
 ifeq ($(UNAME), Linux)
+FLAGS = -o $(TEST) -Wall -Werror -Wextra -no-pie
 OBJ = $(LSRC:.s=.o)
 %.o: %.s
 	nasm -f elf64 $<

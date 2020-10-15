@@ -1,23 +1,27 @@
 global _ft_strcmp
 
+section	.data
+	retn1:  dd -1
+	ret1:	dd 1
+
 section .text
 	_ft_strcmp:
-	push	rdi
-	cmp		[rdi], [rsi]
-	jne		return ; JMP no actualiza flags
-	cmp		[rdi], 0
-	je		returnzero
-	add		rdi, 1
-	add		rsi, 1
-	jmp		_ft_strcmp
+		mov		cl, byte [rsi]
+		cmp		byte [rdi], cl
+		jne		return
+		cmp		byte [rdi], 0
+		je		returnzero
+		add		rdi, 1
+		add		rsi, 1
+		jmp		_ft_strcmp
 
 	returnzero:
-		pop rdi
-		mov rax, 0
+		mov		rax, 0
 		ret
 
-	return
-		cmovl	rax, -1 ; CREO que cmov no actualiza flags
-		cmovge	rax, 1
-		pop		rdi
+	return:
+		mov		al, byte [rdi]
+		movzx	rax, al
+		movzx	rcx, cl
+		sub		eax, ecx
 		ret

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/15 05:06:21 by miki             ###   ########.fr       */
+/*   Updated: 2020/10/15 22:52:57 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 int		ft_write(int fd, const void *buf, size_t nbyte);
 ssize_t ft_read(int fd, void *buf, size_t count);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strcpy(char *dst, const char *src);
 void	helloworld(void);
 void	test(void);
 
@@ -128,19 +129,45 @@ void	teststrlen(char *string)
 	printf("\nC's strlen\nC strlen result: %zu\n", strlen(string));
 	write(1, RESET, sizeof(RESET));
 }
+
+void	teststrcmp(char *s1, char *s2)
+{
+	ft_write(1, GREEN, sizeof(GREEN));
+	printf("\nMy Strcmp: %d\n", ft_strcmp(s1, s2));
+	write(1, BLUE, sizeof(BLUE));
+	printf("\nC's Strcmp: %d\n", strcmp(s1, s2));
+	write(1, RESET, sizeof(RESET));
+}
+
+/*void	teststrcpy(char *s1a, char *s1b, char *s2a, char *s2b)
+{
+	
+	ft_write(1, GREEN, sizeof(GREEN));
+	ft_strcpy(s1a, s1b);
+	printf("\n%s\n", s1a);
+	write(1, BLUE, sizeof(BLUE));
+	strcpy(s2a, s2b);
+	printf("\n%s\n", s2a);
+	write(1, RESET, sizeof(RESET));
+}*/
+
 int	main(void)
 {
 	//int bytes;
 	char *string;
+	char test[15];
+	char test2[15];
 
 	string = "Hello, world!\n";
 	ft_write(1, "\n", 1);
 	teststrlen(string);
 	testwrite(0, string, ft_strlen(string));
 	testread(0, 0, 0);
-	//printf("My Strcmp: %d\n", ft_strcmp("Test", "Test"));
-	//printf("C's Strcmp: %d\n", strcmp("Test", "Test"));
-
+	teststrcmp("TEST", "Tost");
+	ft_strcpy(test, "Hello, world!");
+	printf("\n%s\n", test);
+	strcpy(test2, "Hello, world!");
+	printf("\n%s\n", test2);
 	/*printf("Write Res: %d\n", (bytes = ft_write(1, string, 13)));
 	if (bytes < 0)
 	{
