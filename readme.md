@@ -35,6 +35,7 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 				;
 				; This is easier to understand if we imagine a two bit
 				; unsigned number and a two-character string "ab". ;p
+				;
 				; Unsigned		Signed
 				; Bin	Dec		Bin   Dec
 				; 00 == 0		00 == 0
