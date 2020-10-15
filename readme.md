@@ -35,11 +35,12 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 				;
 				; This is easier to understand if we imagine a two bit
 				; unsigned number and a two-character string "ab". ;p
-				;
-				; 00b == 0
-				; 01b == 1
-				; 10b == 2
-				; 11b == 3
+				; Unsigned		Signed
+				; Bin	Dec		Bin   Dec
+				; 00 == 0		00 == 0
+				; 01 == 1		01 == 1
+				; 10 == 2		11 == -1
+				; 11 == 3		10 == -2
 				;
 				; Thus: -1 == 3.
 				; Thus: scasb executed twice before NULL was found.
