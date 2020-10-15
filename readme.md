@@ -1,7 +1,6 @@
 FT_STRLEN
-		; This strlen is a bit convoluted to understand, but it avoids branching
-		; instructions so it should be much more efficient! It uses x86
-		; processor instructions, though, so perhaps not the most portable.
+
+This strlen is a bit convoluted to understand, but it avoids branching instructions so it should be much more efficient! It uses x86 processor instructions, though, so perhaps not the most portable.
 		
 		_ft_strlen:
 
@@ -12,50 +11,50 @@ FT_STRLEN
 		cld 			; Sets direction flag to 0, so we increment.
 
 		repne scasb 	; scasb raises rdi by 1, repne repeats scasb while the
-						; byte pointed to by rdi is not equal to the value we
-						; stored in al, which was zero.
-						;
-						; Importantly, scasb also decrements rcx by 1 every time
-						; it executes!
-						;
-						; So this is like: while(*rdi){
-						;						rdi++;
-						; 						rcx--; }
+				; byte pointed to by rdi is not equal to the value we
+				; stored in al, which was zero.
+				;
+				; Importantly, scasb also decrements rcx by 1 every time
+				; it executes!
+				;
+				; So this is like: while(*rdi){
+				;						rdi++;
+				; 						rcx--; }
 
-		not rcx 		; Inverts all rcx bits. Reversing all bits of a negative
-						; number with 'not' yields its absolute value - 1.
-						;
-						; Hence: not rcx == abs(rcx) - 1. BUT, since the integer
-						; is actually being treated as unsigned, -1 is really
-						; just MAX_INT, and so not rcx ends up being
-						; MAX_INT - rcx + 1. xD
-						;
-						; I told you it was convoluted.
-						;
-						; This is easier to understand if we imagine a two bit
-						; unsigned number and a two-character string "ab". ;p
-						;
-						; 00b == 0
-						; 01b == 1
-						; 10b == 2
-						; 11b == 3
-						;
-						; Thus: -1 == 3.
-						; Thus: scasb executed twice before NULL was found.
-						; Thus: rcx == 1 == 01b.
-						; Thus: not rcx == 10b + 01b == 11b == 3.
-						; That is 3 with the NULL, but we don't want to count
-						; NULL.
+		not rcx 	; Inverts all rcx bits. Reversing all bits of a negative
+				; number with 'not' yields its absolute value - 1.
+				;
+				; Hence: not rcx == abs(rcx) - 1. BUT, since the integer
+				; is actually being treated as unsigned, -1 is really
+				; just MAX_INT + 1, and so not rcx ends up being
+				; MAX_INT - rcx + 1. xD
+				;
+				; I TOLD you it was convoluted.
+				;
+				; This is easier to understand if we imagine a two bit
+				; unsigned number and a two-character string "ab". ;p
+				;
+				; 00b == 0
+				; 01b == 1
+				; 10b == 2
+				; 11b == 3
+				;
+				; Thus: -1 == 3.
+				; Thus: scasb executed twice before NULL was found.
+				; Thus: rcx == 1 == 01b.
+				; Thus: not rcx == 10b + 01b == 11b == 3.
+				; That is 3 with the NULL, but we don't want to count
+				; NULL.
 
-		dec rcx 		; Subtract 1, because we don't count the NULL.
-						; Thus: rcx - 1 == 2. There are two characters in the
-						; string, so that is the right answer.
-						;
-						; If there had been 3 characters, we'd have subtracted 1
-						; from 0, which, of course, equals -1, which as we know
-						; in unsigned two bits equals 3, so we'd have gotten 3.
-						;
-						; The things we'll do to avoid the jmp instruction. ;)
+		dec rcx 	; Subtract 1, because we don't count the NULL.
+				; Thus: rcx - 1 == 2. There are two characters in the
+				; string, so that is the right answer.
+				;
+				; If there had been 3 characters, we'd have subtracted 1
+				; from 0, which, of course, equals -1, which as we know
+				; in unsigned two bits equals 3, so we'd have gotten 3.
+				;
+				; The things we'll do to avoid the jmp instruction. ;)
 
 		mov rax, rcx 	; This is our return value. :)
 
