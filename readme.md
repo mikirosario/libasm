@@ -6,7 +6,7 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 		
 		_ft_strlen:
 
-		mov rcx, -1 	; Sets rcx to all 1s / MAX_INT.
+		mov rcx, -1 	; Sets rcx bits to all 1s / MAX_INT + 1.
 
 		xor al, al 	; Sets low byte of rax to 0.
 
