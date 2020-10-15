@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
+#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/14 22:51:36 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/15 04:11:08 by miki             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,9 @@ TEST = a.out
 
 SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s ft_strcmp.s
 
-LSRC = helloworld.s ft_strlen.s ft_write_linux.s
+LSRC = ft_write_linux.s ft_read_linux.s ft_strlen_linux.s
 
-FLAGS = -o $(TEST) -Wall -Werror -Wextra
+FLAGS = -o $(TEST) -Wall -Werror -Wextra -no-pie
 
 ifeq ($(UNAME), Darwin)
 OBJ = $(SRC:.s=.o)
@@ -44,7 +44,7 @@ $(NAME): $(OBJ)
 	ar rcs $(NAME) $(OBJ)
 	make -C ./libft
 	make clean -C ./libft
-	gcc $(FLAGS) -I ./libft/ -L ./ -lasm -L ./libft/ -lft -o $(TEST) main.c 
+	gcc $(FLAGS) -o $(TEST) main.c -I ./libft/ -L ./libft/ -lft -L ./ -lasm
 
 #ld -macosx_version_min 10.14.5 -no_pie -o test $(OBJ) -lSystem
 

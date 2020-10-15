@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/14 22:54:00 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/15 05:06:21 by miki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
-//int		ft_strlen(char *str);
+//int		ft_strlen(char *str); Already defined in libft
 int		ft_write(int fd, const void *buf, size_t nbyte);
 ssize_t ft_read(int fd, void *buf, size_t count);
 int		ft_strcmp(const char *s1, const char *s2);
@@ -92,6 +92,10 @@ void	testread(int fd, int badbuf, int bytes)
 **
 ** The errors will be printed just after the writes to ensure they're valid.
 ** Then the results are printed.
+**
+** Note, if the bytes (third) parameter is bad, MacOSX syscall will throw a
+** Bad parameter error, whilst Ubuntu Linux will, weirdly, throw a Bad address
+** error. Don't fault the messenger, I'm just a go-between. ;)
 */
 
 void	testwrite(int fd, char *string, int bytes)
@@ -119,9 +123,9 @@ void	testwrite(int fd, char *string, int bytes)
 void	teststrlen(char *string)
 {
 	write(1, GREEN, sizeof(GREEN));
-	printf("\nft_strlen result: %zu\n", ft_strlen(string));
+	printf("\nMy strlen:\nft_strlen result: %zu\n", ft_strlen(string));
 	write(1, BLUE, sizeof(BLUE));
-	printf("\nC strlen result: %zu\n", strlen(string));
+	printf("\nC's strlen\nC strlen result: %zu\n", strlen(string));
 	write(1, RESET, sizeof(RESET));
 }
 int	main(void)
@@ -132,10 +136,10 @@ int	main(void)
 	string = "Hello, world!\n";
 	ft_write(1, "\n", 1);
 	teststrlen(string);
-	testwrite(1, string, ft_strlen(string));
+	testwrite(0, string, ft_strlen(string));
 	testread(0, 0, 0);
-	printf("My Strcmp: %d\n", ft_strcmp("Test", "Test"));
-	printf("C's Strcmp: %d\n", strcmp("Test", "Test"));
+	//printf("My Strcmp: %d\n", ft_strcmp("Test", "Test"));
+	//printf("C's Strcmp: %d\n", strcmp("Test", "Test"));
 
 	/*printf("Write Res: %d\n", (bytes = ft_write(1, string, 13)));
 	if (bytes < 0)
