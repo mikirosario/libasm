@@ -20,8 +20,8 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 				; it executes!
 				;
 				; So this is like: while(*rdi){
-	;						rdi++;
-	; 						rcx--; }
+				;			rdi++;
+	 			;			rcx--; }
 
 		not rcx 	; Inverts all rcx bits. Reversing all bits of a negative
 				; number with 'not' yields its absolute value - 1.
