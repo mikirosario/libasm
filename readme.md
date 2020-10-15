@@ -6,7 +6,7 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 		
 		_ft_strlen:
 
-		mov rcx, -1 	; Sets rcx bits to all 1s / MAX_UINT.
+		mov rcx, -1 	; Sets rcx bits to all 1s / ULONG_MAX.
 
 		xor al, al 	; Sets low byte of rax to 0.
 
@@ -28,8 +28,8 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 				;
 				; Hence: not rcx == abs(rcx) - 1. BUT, since the integer
 				; is actually being treated as unsigned, -1 is really
-				; just MAX_UINT, and so not rcx ends up being
-				; MAX_UINT - rcx + 1. xD
+				; just ULONG_MAX, and so not rcx ends up being
+				; ULONG_MAX - rcx + 1. xD
 				;
 				; I TOLD you it was convoluted.
 				;
