@@ -6,7 +6,7 @@
 #    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/15 22:35:21 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/16 22:35:27 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ TEST = a.out
 
 # SRC = test.s
 
-SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s
+SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s
 
 LSRC = ft_write_linux.s ft_read_linux.s ft_strlen_linux.s
 

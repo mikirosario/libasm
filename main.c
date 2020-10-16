@@ -6,7 +6,7 @@
 /*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/15 22:52:57 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/16 22:55:45 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,24 +139,31 @@ void	teststrcmp(char *s1, char *s2)
 	write(1, RESET, sizeof(RESET));
 }
 
-/*void	teststrcpy(char *s1a, char *s1b, char *s2a, char *s2b)
+/*
+** We pass two pointers to destination strings defined in the main, and a
+** source string from which to copy, then print the destination strings after
+** the copy is made. We do the copy first with my ft_strcpy and copy to mydst,
+** then with C's strcpy and copy to cdst.
+*/
+
+void	teststrcpy(char *mydst, char *cdst, char *src)
 {
-	
 	ft_write(1, GREEN, sizeof(GREEN));
-	ft_strcpy(s1a, s1b);
-	printf("\n%s\n", s1a);
+	ft_strcpy(mydst, src);
+	printf("\nMy dst: %s\n", mydst);
 	write(1, BLUE, sizeof(BLUE));
-	strcpy(s2a, s2b);
-	printf("\n%s\n", s2a);
+	strcpy(cdst, src);
+	printf("\nC's dst: %s\n", cdst);
 	write(1, RESET, sizeof(RESET));
-}*/
+}
 
 int	main(void)
 {
 	//int bytes;
 	char *string;
-	char test[15];
-	char test2[15];
+	char mydst[] = {"Marvin"};
+	char cdst[] = {"Marvin"};
+	char *cpy;
 
 	string = "Hello, world!\n";
 	ft_write(1, "\n", 1);
@@ -164,21 +171,15 @@ int	main(void)
 	testwrite(0, string, ft_strlen(string));
 	testread(0, 0, 0);
 	teststrcmp("TEST", "Tost");
-	ft_strcpy(test, "Hello, world!");
-	printf("\n%s\n", test);
-	strcpy(test2, "Hello, world!");
-	printf("\n%s\n", test2);
-	/*printf("Write Res: %d\n", (bytes = ft_write(1, string, 13)));
-	if (bytes < 0)
+	teststrcpy(mydst, cdst, "Nivram");
+	cpy = ft_strdup("¡Albricias!");
+	if (cpy)
 	{
-		printf("My Errno: %d\n", errno);
-		perror("\0");
+		printf("\n%s\n", cpy);
+		free(cpy);
+		cpy = NULL;
 	}
-	printf("Write Res: %d\n", (bytes = write(1, string, 13)));
-	if (bytes < 0)
-	{
-		printf("C's Errno: %d\n", errno);
-		perror("\0");
-	}*/
+	else
+		perror(0); // This works, but the only way I know to test it is modifying the strdup source code to force it onto this branch... ;)
 	return (0);
 }

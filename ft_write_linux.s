@@ -13,7 +13,7 @@ section .text
 		neg		rax
 		push	rax
 		call	__errno_location
-		pop		rbx
-		mov		[rax], dword ebx
+		pop		rcx
+		mov		[rax], dword ecx
 		mov		rax, -1
 		ret

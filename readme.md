@@ -97,10 +97,11 @@ Fairly straightforward syscall, with a couple of caveats. First, we are required
 
 		call ___error		; rax should now have the pointer to errno.
 
-		pop rbx			; Let's get the syscall return value back, into rbx
-					; this time.
+		pop rcx			; Let's get the syscall return value back, into rcx
+					; this time. Used to use rbx, but found out that it's
+					; preserved, so now use rcx as it's scratch.
 
-		mov [rax], ebx		; As I understand, errno is a 32 bit int, so I'll
+		mov [rax], ecx		; As I understand, errno is a 32 bit int, so I'll
 					; pass the errno value as such. Note, even though
 					; errno is a 32 bit int, its pointer is still a 64
 					; bit pointer, natch. ;)
@@ -111,3 +112,91 @@ Fairly straightforward syscall, with a couple of caveats. First, we are required
 					; if you want more info, pitiful user. Mwahahaha. :p
 
 		ret			; Bye!
+
+FT_READ
+
+Practically identical to FT_WRITE, except we use the syscall code 2000003 to
+call the read function instead of the write function. These syscall functions
+are really just wrappers for, well, the system functions. Not that I'm
+complaining! xD
+
+FT_STRCMP
+
+Straightforward implementation. No surprises or fancy tricks here. This is more
+or less derived and adapted straight from the C version. ;) We start out with
+two pointers per the calling convention, the pointer to src (in rdi), and the
+pointer to dst (in rsi). Both pointers are to (presumably) NULL-terminated
+character strings of unknown length.
+
+section .text
+	_ft_strcmp:
+		mov		cl, byte [rsi]	; Move the character pointed to by src (rsi)
+							; into the lower byte of the rcx register (cl).
+	
+		cmp		byte [rdi], cl	; Compare that character with the character
+							; pointed to by dst (rdi). this really the same as
+							; sub [rdi], cl, except we don't store the result,
+							; we just set the flags.
+
+		jne		return			; If the result of cmp is not zero it means they
+							; are not equal. (Hence, jne and jnz mean the same
+							; thing). Then we jump to return, where we'll find
+							; the difference and return it.
+
+		cmp		byte [rdi], 0	; If the result of cmp is equal, we want to make
+							; sure we haven't reached the end (NULL) of the dst
+							; string before continuing, so we compare the
+							; character it points to with 0.
+
+		je		returnzero		; Once again, if the result is zero, it means
+							; they're equal, and the zero flag will be set.
+							; (Hence je and jz mean the same thing). If that
+							; happens, it means dst was equal to src, that is,
+							; it was equal up to AND INCLUDING the NULL value.
+							; So we jump to returnzero to tell the user.
+
+		add		rdi, 1			; If we have nothing to return yet, we raise the
+							; the pointer address. We're addressing a string of
+							; bytes, so we raise it by one. This is just like
+							; dst++.
+	
+		add		rsi, 1			; We raise the second pointer address too, so
+							; this is like src++.
+
+		jmp		_ft_strcmp		; And we go back to the first instruction to
+							; start again.
+
+	returnzero:
+		mov		rax, 0			; If we need to return zero, well, we move zero
+							; into rax...
+
+		ret						; And we return it. ;)
+
+	return:
+		mov		al, byte [rdi]	; If we need to return a non-zero result, it
+							; will be *dst - *src. First we copy the character
+							; pointer to by rdi to the lower byte of rax (al).
+							; Note this will do nothing to the higher bytes,
+							; which might still hold junk...
+
+		movzx	rax, al			; ...But not after this command. ;) Here we
+							; instruct the CPU to clear the rest of the register
+							; and store only the value we put into the lower
+							; byte. Handy, right? ;)
+
+		movzx	rcx, cl			; Remember, we already stored the character
+							; pointed to by src (rsi) in the lower byte of rcx
+							; within the loop. Since it is already there, we
+							; just need to clear the rest of that register, too.
+
+		sub		eax, ecx		; Now that we know we have the values we want in
+							; the registers, we subtract src from dst, storing
+							; the result in dst. Note that while we are
+							; subtracting two bytes, the function actually
+							; returns an int (four bytes). So we do 32 bit
+							; subtraction and return the lower 32 bits of the
+							; register (eax). Probably not strictly necessary,
+							; but it feels cleaner to me this way. Plus, reminds
+							; me of the real size of the return value.
+
+		ret						; That's all, folks!

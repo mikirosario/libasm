@@ -12,7 +12,7 @@ section .text
 	error:
 		push rax
 		call ___error
-		pop rbx
-		mov [rax], ebx
+		pop rcx
+		mov [rax], ecx
 		mov rax, -1
 		ret
