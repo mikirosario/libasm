@@ -178,12 +178,12 @@ character strings of unknown length.
 						; Note this will do nothing to the higher bytes,
 						; which might still hold junk...
 
-		movzx	rax, al			; ...But not after this command. ;) Here we
+		movzx		rax, al		; ...But not after this command. ;) Here we
 						; instruct the CPU to clear the rest of the register
 						; and store only the value we put into the lower
 						; byte. Handy, right? ;)
 
-		movzx	rcx, cl			; Remember, we already stored the character
+		movzx		rcx, cl		; Remember, we already stored the character
 						; pointed to by src (rsi) in the lower byte of rcx
 						; within the loop. Since it is already there, we
 						; just need to clear the rest of that register, too.
