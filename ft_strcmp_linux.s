@@ -1,7 +1,7 @@
-global _ft_strcmp
+global ft_strcmp
 
 section .text
-	_ft_strcmp:
+	ft_strcmp:
 		mov		cl, byte [rsi]
 		cmp		byte [rdi], cl
 		jne		return
@@ -9,7 +9,7 @@ section .text
 		je		returnzero
 		add		rdi, 1
 		add		rsi, 1
-		jmp		_ft_strcmp
+		jmp		ft_strcmp
 
 	returnzero:
 		mov		rax, 0

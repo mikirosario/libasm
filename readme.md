@@ -201,19 +201,75 @@ section .text
 
 		ret						; That's all, folks!
 
+FT_STRCPY
+
+We receive a pointer to dst in rdi and a pointer to src in rsi, per the Calling
+Convention. First I clear rcx by xoring it with itself. Then I move the pointer
+to dst into rax, as this is what we will return. Then we go into the copy loop,
+which checks the character at *src and jumps to the return code if it's a NULL
+character (0), otherwise we copy what is in *src to *dst and increment both
+pointers by 1 (as we are running through a string of bytes).
+
+	_ft_strcpy:
+		xor	rcx, rcx			; Xoring rcx with itself sets the register to 0.
+
+		mov	rax, rdi			; We move the address in rdi into rax, since we
+							; want to return it.
+	
+	copy:
+		cmp	byte [rsi], 0		; Compare the char pointed to by rsi (src)
+							; with 0.
+
+		je	return				; If it is equal to zero, jump to return.
+							; Otherwise, continue...
+
+		mov	cl, byte [rsi]		; You can't directly move values from one area
+							; of memory to another. They must go through the CPU
+							; register first. Makes sense if you think about it.
+							; So we'll copy the character pointed to by the
+							; address in rsi (src) into the low byte of rcx
+							; (cl).
+	
+		mov	byte [rdi], cl		; Then we'll go ahead and copy that byte from cl
+							; into the memory pointed to by the address at rdi
+							; (dst). This is like *dst = *src in C.
+
+		add	rdi, 1				; Now we increment the rdi pointer by 1, so it
+							; points to the next position in the dst string.
+
+		add	rsi, 1				; We increment the rsi pointer by 1, so it
+							; points to the next character in the src string.
+
+		jmp	copy				; Finally, we jump back to the cmp byte
+							; instruction.
+	
+	return:
+		mov	byte [rdi], 0		; If we're here, then we reached the end (null)
+							; of the src string, but we do still need to copy
+							; the null to null-terminate the dst string. So we
+							; do that with this instruction. Remember, rdi is
+							; pointing now to the position in dst after the last
+							; position that was copied to in the copy loop.
+
+		ret						; And then we just return. Remember, we put the
+							; original dst address into rax at the beginning. So
+							; it's still there, pointing to the first byte of
+							; dst string, waiting to be reunited with the caller
+							; someday. :) <3
+
 FT_STRDUP
 
-Does the same as the C version, except now I properly set errno. We receive a
-pointer to source in rdi per the Calling Convention, measure its length with
-ft_strlen, add 1 for the NULL, call malloc to reserve that amount of memory, use
-ft_strcpy to copy the string pointed to by rdi into the memory we just reserved
-with malloc. If malloc fails, it sets errno (thanks gbudau for the heads up!)
-so we can just return the NULL pointer malloc returns and errno will be set.
+We receive a pointer to source in rdi per the Calling Convention, measure its
+length with ft_strlen, add 1 for the NULL, call malloc to reserve that amount of
+memory, use ft_strcpy to copy the string pointed to by rdi into the memory we
+just reserved with malloc. If malloc fails, it sets errno (thanks gbudau for the
+heads up!) so we can just return the NULL pointer malloc returns and errno will
+be set.
 
 	_ft_strdup:
-		push rbx				; In the Calling Convention we're this register
-							; is preserved, and I'll be using it, so first I
-							; save it on the stack.
+		push rbx				; In the Calling Convention this register is
+							; preserved, and I'll be using it, so first I save
+							; it on the stack.
 
 		mov	rbx, rdi			; Save poor, defenceless src pointer from
 							; ravages of getting clobbered by passing it to the
