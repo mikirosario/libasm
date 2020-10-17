@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/17 21:15:20 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/17 21:20:19 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,5 +220,8 @@ int	main(void)
 	teststrcpy(mydst, cdst, "Nivram");
 	teststrdup("¡Albricias!");
 
+	printf("\nT: %d, N: %d, V: %d, F: %d, R: %d, Sp: %d\n", '\t', '\n', '\v', '\f', '\r', ' ');
+	printf("\nMy Isspace: %d\n", ft_isspace('b'));
+	printf("C's Isspace: %d\n", isspace('b'));
 	return (0);
 }

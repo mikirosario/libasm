@@ -200,3 +200,108 @@ section .text
 							; me of the real size of the return value.
 
 		ret						; That's all, folks!
+
+FT_STRDUP
+
+Does the same as the C version, except now I properly set errno. We receive a
+pointer to source in rdi per the Calling Convention, measure its length with
+ft_strlen, add 1 for the NULL, call malloc to reserve that amount of memory, use
+ft_strcpy to copy the string pointed to by rdi into the memory we just reserved
+with malloc. If malloc fails, it sets errno (thanks gbudau for the heads up!)
+so we can just return the NULL pointer malloc returns and errno will be set.
+
+	_ft_strdup:
+		push rbx				; In the Calling Convention we're this register
+							; is preserved, and I'll be using it, so first I
+							; save it on the stack.
+
+		mov	rbx, rdi			; Save poor, defenceless src pointer from
+							; ravages of getting clobbered by passing it to the
+							; preserved pointer. This is a just copy, so it will
+							; still be in the rdi register, which as we know is
+							; the first register we assume that an argument is
+							; passed into per our Calling Convention...
+
+		call _ft_strlen			; There we go, now we should have the strlen in
+							; rax...
+
+		mov rdi, rax			; I'm about to call malloc and we'll need to
+							; pass it basically just strlen + 1 (for NULL) as
+							; our size, because strdup just copies char strings.
+							; We'll move it to rdi, of course, because that's
+							; where malloc will look for its argument per the
+							; Calling Convention.
+
+		add rdi, 1				; So now let's add that 1...
+
+		call _malloc			; And... malloc! If I'd have told myself in the
+							; piscine final exam, sweating over the dreaded
+							; malloc exercise, that in a year I'd be calling
+							; malloc from Assembly... xD Anyway, now we should
+							; have a pointer to the malloc'ed memory in rax.
+							; Good guy, malloc.	Thanks, malloc. :)
+
+		cmp rax, 0				; BUT, is that pointer NULL? We can't very well
+							; do much with a null pointer, can we?
+
+		je return				; If it's null, get out of town.
+
+		mov rdi, rax			; If it's not null, we'll be passing it to
+							; strcpy as the dst string. So we move it to
+							; rdi.
+
+		mov rsi, rbx			; And we'll be passing the original src pointer
+							; to _ft_strcpy as the src string. Remember we saved
+							; that in the preserved register rbx. Now we'll pass
+							; it to rsi, the register assumed to contain the
+							; second argument, per the Calling Convention.
+
+		call _ft_strcpy			; Go forth, and multiply! This should leave a
+							; pointer to dst in rax. Convenient!
+
+	return:
+		pop rbx					; Get the REAL rbx back from the stack before
+							; returning.
+
+		ret						; Return the pointer to the copy - don't forget
+							; to free it you naughty runtime caller!
+
+FT_ISSPACE
+
+I needed this for my atoi, so I threw it together. It returns 1 if a whitespace
+is found, as isspace is wont to do. We receive the ASCII code to check in rdi,
+hereinafter the "char". ;p
+
+	_ft_isspace:
+		mov rax, 0				; Set rax to 0, as it will remain unless we find
+							; a whitespace.
+
+		mov rcx, 1				; For whatever reason, cmov does not work with
+							; immediates, so we use rcx to store the 1 we will
+							; return if we do find a whitespace.
+
+		cmp rdi, 9			; Compare the char with 9, ASCII for \t.
+
+		cmove rax, rcx		; If equal, set rax to rcx (1).
+
+		cmp rdi, 10			; Compare the char with 10, ASCII for \n.
+
+		cmove rax, rcx		; If equal, set rax to rcx (1).
+
+		cmp rdi, 11			; Compare the char with 11, ASCII for \v.
+
+		cmove rax, rcx		; If equal, set rax to rcx (1).
+
+		cmp rdi, 12			; Compare the char with 12, ASCII for \f.
+
+		cmove rax, rcx		; If equal, set rax to rcx (1).
+
+		cmp rdi, 13			; Compare the char with 13, ASCII for \r.
+
+		cmove rax, rcx		; If equal, set rax to rcx (1).
+
+		cmp rdi, 32			; Compare the char with 32, ASCII for ' ' (space).
+
+		cmove rax, rcx		; If equal, set rax to rcx (1).
+
+		ret					; Return.

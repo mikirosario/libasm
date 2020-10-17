@@ -6,7 +6,7 @@
 #    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/16 22:35:27 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/17 21:17:44 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,13 +18,18 @@ TEST = a.out
 
 # SRC = test.s
 
-SRC = helloworld.s test.s ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s
+SRC = ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s
+
+BSRC = ft_isspace.s
 
 LSRC = ft_write_linux.s ft_read_linux.s ft_strlen_linux.s
+
+LBSRC = 
 
 ifeq ($(UNAME), Darwin)
 FLAGS = -o $(TEST) -Wall -Werror -Wextra
 OBJ = $(SRC:.s=.o)
+BOBJ = $(BSRC:.s=.o)
 %.o: %.s
 	nasm -f macho64 $<
 endif
@@ -32,6 +37,7 @@ endif
 ifeq ($(UNAME), Linux)
 FLAGS = -o $(TEST) -Wall -Werror -Wextra -no-pie
 OBJ = $(LSRC:.s=.o)
+BOBJ = $(LBSRC:.s=.o)
 %.o: %.s
 	nasm -f elf64 $<
 endif
@@ -42,15 +48,16 @@ $(LIBFT):
 
 $(NAME): $(OBJ)
 	ar rcs $(NAME) $(OBJ)
-	make -C ./libft
-	make clean -C ./libft
-	gcc $(FLAGS) -o $(TEST) main.c -I ./libft/ -L ./libft/ -lft -L ./ -lasm
+	# make -C ./libft
+	# make clean -C ./libft
+	# gcc $(FLAGS) -o $(TEST) main.c -I ./libft/ -L ./libft/ -lft -L ./ -lasm
+	gcc $(FLAGS) -o $(TEST) main.c -L ./ -lasm
 
 #ld -macosx_version_min 10.14.5 -no_pie -o test $(OBJ) -lSystem
 
-linux:
-	nasm -f elf64 $(LSRC) -o $(LOBJ)
-	ld -m elf_x86_64 $(LOBJ) -o $(NAME)
+bonus: $(OBJ) $(BOBJ)
+	ar rcs $(NAME) $(OBJ) $(BOBJ)
+	gcc $(FLAGS) -o $(TEST) main_bonus.c -L ./ -lasm
 
 all: $(NAME)
 
@@ -59,7 +66,7 @@ clean:
 
 fclean: clean
 	rm -f $(NAME) $(TEST)
-	make fclean -C ./libft
+	# make fclean -C ./libft
 
 re: fclean all
 
