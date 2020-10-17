@@ -128,78 +128,77 @@ two pointers per the calling convention, the pointer to src (in rdi), and the
 pointer to dst (in rsi). Both pointers are to (presumably) NULL-terminated
 character strings of unknown length.
 
-section .text
 	_ft_strcmp:
 		mov		cl, byte [rsi]	; Move the character pointed to by src (rsi)
-							; into the lower byte of the rcx register (cl).
+						; into the lower byte of the rcx register (cl).
 	
 		cmp		byte [rdi], cl	; Compare that character with the character
-							; pointed to by dst (rdi). this really the same as
-							; sub [rdi], cl, except we don't store the result,
-							; we just set the flags.
+						; pointed to by dst (rdi). this really the same as
+						; sub [rdi], cl, except we don't store the result,
+						; we just set the flags.
 
-		jne		return			; If the result of cmp is not zero it means they
-							; are not equal. (Hence, jne and jnz mean the same
-							; thing). Then we jump to return, where we'll find
-							; the difference and return it.
+		jne		return		; If the result of cmp is not zero it means they
+						; are not equal. (Hence, jne and jnz mean the same
+						; thing). Then we jump to return, where we'll find
+						; the difference and return it.
 
 		cmp		byte [rdi], 0	; If the result of cmp is equal, we want to make
-							; sure we haven't reached the end (NULL) of the dst
-							; string before continuing, so we compare the
-							; character it points to with 0.
+						; sure we haven't reached the end (NULL) of the dst
+						; string before continuing, so we compare the
+						; character it points to with 0.
 
-		je		returnzero		; Once again, if the result is zero, it means
-							; they're equal, and the zero flag will be set.
-							; (Hence je and jz mean the same thing). If that
-							; happens, it means dst was equal to src, that is,
-							; it was equal up to AND INCLUDING the NULL value.
-							; So we jump to returnzero to tell the user.
+		je		returnzero	; Once again, if the result is zero, it means
+						; they're equal, and the zero flag will be set.
+						; (Hence je and jz mean the same thing). If that
+						; happens, it means dst was equal to src, that is,
+						; it was equal up to AND INCLUDING the NULL value.
+						; So we jump to returnzero to tell the user.
 
-		add		rdi, 1			; If we have nothing to return yet, we raise the
-							; the pointer address. We're addressing a string of
-							; bytes, so we raise it by one. This is just like
-							; dst++.
+		add		rdi, 1		; If we have nothing to return yet, we raise the
+						; the pointer address. We're addressing a string of
+						; bytes, so we raise it by one. This is just like
+						; dst++.
 	
-		add		rsi, 1			; We raise the second pointer address too, so
-							; this is like src++.
+		add		rsi, 1		; We raise the second pointer address too, so
+						; this is like src++.
 
-		jmp		_ft_strcmp		; And we go back to the first instruction to
-							; start again.
+		jmp		_ft_strcmp	; And we go back to the first instruction to
+						; start again.
 
 	returnzero:
-		mov		rax, 0			; If we need to return zero, well, we move zero
-							; into rax...
+		mov		rax, 0		; If we need to return zero, well, we move zero
+						; into rax...
 
-		ret						; And we return it. ;)
+		ret				; And we return it. ;)
 
 	return:
 		mov		al, byte [rdi]	; If we need to return a non-zero result, it
-							; will be *dst - *src. First we copy the character
-							; pointer to by rdi to the lower byte of rax (al).
-							; Note this will do nothing to the higher bytes,
-							; which might still hold junk...
+						; will be *dst - *src. First we copy the character
+						; pointer to by rdi to the lower byte of rax (al).
+						; Note this will do nothing to the higher bytes,
+						; which might still hold junk...
 
 		movzx	rax, al			; ...But not after this command. ;) Here we
-							; instruct the CPU to clear the rest of the register
-							; and store only the value we put into the lower
-							; byte. Handy, right? ;)
+						; instruct the CPU to clear the rest of the register
+						; and store only the value we put into the lower
+						; byte. Handy, right? ;)
 
 		movzx	rcx, cl			; Remember, we already stored the character
-							; pointed to by src (rsi) in the lower byte of rcx
-							; within the loop. Since it is already there, we
-							; just need to clear the rest of that register, too.
+						; pointed to by src (rsi) in the lower byte of rcx
+						; within the loop. Since it is already there, we
+						; just need to clear the rest of that register, too.
 
-		sub		eax, ecx		; Now that we know we have the values we want in
-							; the registers, we subtract src from dst, storing
-							; the result in dst. Note that while we are
-							; subtracting two bytes, the function actually
-							; returns an int (four bytes). So we do 32 bit
-							; subtraction and return the lower 32 bits of the
-							; register (eax). Probably not strictly necessary,
-							; but it feels cleaner to me this way. Plus, reminds
-							; me of the real size of the return value.
+		sub		eax, ecx	; Now that we know we have the values we want in
+						; the registers, we subtract src from dst, storing
+						; the result in dst. Note that while we are
+						; subtracting two bytes, the function actually
+						; returns an int (four bytes). So we do 32 bit
+						; subtraction and return the lower 32 bits of the
+						; register (eax). Probably not strictly necessary,
+						; but it feels cleaner to me this way. Plus, reminds
+						; me of the real size of the return value.
 
-		ret						; That's all, folks!
+		ret				; That's all, folks!
 
 FT_STRCPY
 
@@ -211,51 +210,51 @@ character (0), otherwise we copy what is in *src to *dst and increment both
 pointers by 1 (as we are running through a string of bytes).
 
 	_ft_strcpy:
-		xor	rcx, rcx			; Xoring rcx with itself sets the register to 0.
+		xor	rcx, rcx		; Xoring rcx with itself sets the register to 0.
 
-		mov	rax, rdi			; We move the address in rdi into rax, since we
-							; want to return it.
+		mov	rax, rdi		; We move the address in rdi into rax, since we
+						; want to return it.
 	
 	copy:
 		cmp	byte [rsi], 0		; Compare the char pointed to by rsi (src)
-							; with 0.
+						; with 0.
 
-		je	return				; If it is equal to zero, jump to return.
-							; Otherwise, continue...
+		je	return			; If it is equal to zero, jump to return.
+						; Otherwise, continue...
 
 		mov	cl, byte [rsi]		; You can't directly move values from one area
-							; of memory to another. They must go through the CPU
-							; register first. Makes sense if you think about it.
-							; So we'll copy the character pointed to by the
-							; address in rsi (src) into the low byte of rcx
-							; (cl).
+						; of memory to another. They must go through the CPU
+						; register first. Makes sense if you think about it.
+						; So we'll copy the character pointed to by the
+						; address in rsi (src) into the low byte of rcx
+						; (cl).
 	
 		mov	byte [rdi], cl		; Then we'll go ahead and copy that byte from cl
-							; into the memory pointed to by the address at rdi
-							; (dst). This is like *dst = *src in C.
+						; into the memory pointed to by the address at rdi
+						; (dst). This is like *dst = *src in C.
 
-		add	rdi, 1				; Now we increment the rdi pointer by 1, so it
-							; points to the next position in the dst string.
+		add	rdi, 1			; Now we increment the rdi pointer by 1, so it
+						; points to the next position in the dst string.
 
-		add	rsi, 1				; We increment the rsi pointer by 1, so it
-							; points to the next character in the src string.
+		add	rsi, 1			; We increment the rsi pointer by 1, so it
+						; points to the next character in the src string.
 
-		jmp	copy				; Finally, we jump back to the cmp byte
-							; instruction.
+		jmp	copy			; Finally, we jump back to the cmp byte
+						; instruction.
 	
 	return:
 		mov	byte [rdi], 0		; If we're here, then we reached the end (null)
-							; of the src string, but we do still need to copy
-							; the null to null-terminate the dst string. So we
-							; do that with this instruction. Remember, rdi is
-							; pointing now to the position in dst after the last
-							; position that was copied to in the copy loop.
+						; of the src string, but we do still need to copy
+						; the null to null-terminate the dst string. So we
+						; do that with this instruction. Remember, rdi is
+						; pointing now to the position in dst after the last
+						; position that was copied to in the copy loop.
 
-		ret						; And then we just return. Remember, we put the
-							; original dst address into rax at the beginning. So
-							; it's still there, pointing to the first byte of
-							; dst string, waiting to be reunited with the caller
-							; someday. :) <3
+		ret				; And then we just return. Remember, we put the
+						; original dst address into rax at the beginning. So
+						; it's still there, pointing to the first byte of
+						; dst string, waiting to be reunited with the caller
+						; someday. :) <3
 
 FT_STRDUP
 
@@ -267,60 +266,60 @@ heads up!) so we can just return the NULL pointer malloc returns and errno will
 be set.
 
 	_ft_strdup:
-		push rbx				; In the Calling Convention this register is
-							; preserved, and I'll be using it, so first I save
-							; it on the stack.
+		push rbx			; In the Calling Convention this register is
+						; preserved, and I'll be using it, so first I save
+						; it on the stack.
 
-		mov	rbx, rdi			; Save poor, defenceless src pointer from
-							; ravages of getting clobbered by passing it to the
-							; preserved pointer. This is a just copy, so it will
-							; still be in the rdi register, which as we know is
-							; the first register we assume that an argument is
-							; passed into per our Calling Convention...
+		mov	rbx, rdi		; Save poor, defenceless src pointer from
+						; ravages of getting clobbered by passing it to the
+						; preserved pointer. This is a just copy, so it will
+						; still be in the rdi register, which as we know is
+						; the first register we assume that an argument is
+						; passed into per our Calling Convention...
 
 		call _ft_strlen			; There we go, now we should have the strlen in
-							; rax...
+						; rax...
 
 		mov rdi, rax			; I'm about to call malloc and we'll need to
-							; pass it basically just strlen + 1 (for NULL) as
-							; our size, because strdup just copies char strings.
-							; We'll move it to rdi, of course, because that's
-							; where malloc will look for its argument per the
-							; Calling Convention.
+						; pass it basically just strlen + 1 (for NULL) as
+						; our size, because strdup just copies char strings.
+						; We'll move it to rdi, of course, because that's
+						; where malloc will look for its argument per the
+						; Calling Convention.
 
-		add rdi, 1				; So now let's add that 1...
+		add rdi, 1			; So now let's add that 1...
 
 		call _malloc			; And... malloc! If I'd have told myself in the
-							; piscine final exam, sweating over the dreaded
-							; malloc exercise, that in a year I'd be calling
-							; malloc from Assembly... xD Anyway, now we should
-							; have a pointer to the malloc'ed memory in rax.
-							; Good guy, malloc.	Thanks, malloc. :)
+						; piscine final exam, sweating over the dreaded
+						; malloc exercise, that in a year I'd be calling
+						; malloc from Assembly... xD Anyway, now we should
+						; have a pointer to the malloc'ed memory in rax.
+						; Good guy, malloc.	Thanks, malloc. :)
 
-		cmp rax, 0				; BUT, is that pointer NULL? We can't very well
-							; do much with a null pointer, can we?
+		cmp rax, 0			; BUT, is that pointer NULL? We can't very well
+						; do much with a null pointer, can we?
 
-		je return				; If it's null, get out of town.
+		je return			; If it's null, get out of town.
 
 		mov rdi, rax			; If it's not null, we'll be passing it to
-							; strcpy as the dst string. So we move it to
-							; rdi.
+						; strcpy as the dst string. So we move it to
+						; rdi.
 
 		mov rsi, rbx			; And we'll be passing the original src pointer
-							; to _ft_strcpy as the src string. Remember we saved
-							; that in the preserved register rbx. Now we'll pass
-							; it to rsi, the register assumed to contain the
-							; second argument, per the Calling Convention.
+						; to _ft_strcpy as the src string. Remember we saved
+						; that in the preserved register rbx. Now we'll pass
+						; it to rsi, the register assumed to contain the
+						; second argument, per the Calling Convention.
 
 		call _ft_strcpy			; Go forth, and multiply! This should leave a
-							; pointer to dst in rax. Convenient!
+						; pointer to dst in rax. Convenient!
 
 	return:
-		pop rbx					; Get the REAL rbx back from the stack before
-							; returning.
+		pop rbx				; Get the REAL rbx back from the stack before
+						; returning.
 
-		ret						; Return the pointer to the copy - don't forget
-							; to free it you naughty runtime caller!
+		ret				; Return the pointer to the copy - don't forget
+						; to free it you naughty runtime caller!
 
 FT_ISSPACE
 
@@ -329,35 +328,35 @@ is found, as isspace is wont to do. We receive the ASCII code to check in rdi,
 hereinafter the "char". ;p
 
 	_ft_isspace:
-		mov rax, 0				; Set rax to 0, as it will remain unless we find
-							; a whitespace.
+		mov rax, 0			; Set rax to 0, as it will remain unless we find
+						; a whitespace.
 
-		mov rcx, 1				; For whatever reason, cmov does not work with
-							; immediates, so we use rcx to store the 1 we will
-							; return if we do find a whitespace.
+		mov rcx, 1			; For whatever reason, cmov does not work with
+						; immediates, so we use rcx to store the 1 we will
+						; return if we do find a whitespace.
 
 		cmp rdi, 9			; Compare the char with 9, ASCII for \t.
 
-		cmove rax, rcx		; If equal, set rax to rcx (1).
+		cmove rax, rcx			; If equal, set rax to rcx (1).
 
 		cmp rdi, 10			; Compare the char with 10, ASCII for \n.
 
-		cmove rax, rcx		; If equal, set rax to rcx (1).
+		cmove rax, rcx			; If equal, set rax to rcx (1).
 
 		cmp rdi, 11			; Compare the char with 11, ASCII for \v.
 
-		cmove rax, rcx		; If equal, set rax to rcx (1).
+		cmove rax, rcx			; If equal, set rax to rcx (1).
 
 		cmp rdi, 12			; Compare the char with 12, ASCII for \f.
 
-		cmove rax, rcx		; If equal, set rax to rcx (1).
+		cmove rax, rcx			; If equal, set rax to rcx (1).
 
 		cmp rdi, 13			; Compare the char with 13, ASCII for \r.
 
-		cmove rax, rcx		; If equal, set rax to rcx (1).
+		cmove rax, rcx			; If equal, set rax to rcx (1).
 
 		cmp rdi, 32			; Compare the char with 32, ASCII for ' ' (space).
 
-		cmove rax, rcx		; If equal, set rax to rcx (1).
+		cmove rax, rcx			; If equal, set rax to rcx (1).
 
-		ret					; Return.
+		ret				; Return.
