@@ -12,53 +12,64 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 
 		cld 		; Sets direction flag to 0, so we increment.
 
-		repne scasb 	; scasb raises rdi by 1, repne repeats scasb while the
-				; byte pointed to by rdi is not equal to the value we
-				; stored in al, which was zero.
+		repne scasb 	; scasb raises rdi by 1 y decrements rcx by 1, and repne
+				; repeats scasb while the byte pointed to by rdi is not
+				; equal to the value we stored in al, which was zero.
 				;
-				; Importantly, scasb also decrements rcx by 1 every time
-				; it executes!
+				; Remember, scasb decrements rcx by 1 every time it
+				; executes! And it will also execute when it finds the
+				; zero.
 				;
-				; So this is like: while(*rdi){
-				;			rdi++;
-	 			;			rcx--; }
+				; So this is just like: do {
+				;			    rdi++;
+	 			;			    rcx--; } while(*rdi)
 
 		not rcx 	; Inverts all rcx bits. Reversing all bits of a negative
 				; number with 'not' yields its absolute value - 1.
 				;
-				; Hence: not rcx == abs(rcx) - 1. BUT, since the integer
-				; is actually being treated as unsigned, -1 is really
-				; just ULONG_MAX, and so not rcx ends up being
-				; ULONG_MAX - rcx + 1. xD
+				; Hence: not rcx == abs(rcx) - 1. So if we went through
+				; the loop three times: rcx == -1 - 3 == -4. Then:
+				; not rcx == 3. Since that includes the null, 3 - 1 is
+				; our string length.
 				;
-				; I TOLD you it was convoluted.
+				; I TOLD you it was convoluted. xD
 				;
-				; This is easier to understand if we imagine a two bit
-				; unsigned number and a two-character string "ab". ;p
+				; This is easier to understand if we imagine a three bit
+				; number and a three-character string "abc". ;p
 				;
-				; Unsigned		Signed
-				; Bin	Dec		Bin   Dec
-				; 00 == 0		00 == 0
-				; 01 == 1		01 == 1
-				; 10 == 2		11 == -1
-				; 11 == 3		10 == -2
+				; Let's imagine that we have three bit unsigned, three
+				; bit signed, and three bit negatives - where we treat
+				; every possible three bit value as a negative (That is
+				; basically what we're doing here).
 				;
-				; Thus: -1 == 3.
-				; Thus: scasb executed twice before NULL was found.
-				; Thus: rcx == 1 == 01b.
-				; Thus: not rcx == 10b + 01b == 11b == 3.
-				; That is 3 with the NULL, but we don't want to count
-				; NULL.
+				; Unsigned		Signed		Negatives
+				; Bin	Dec		Bin   Dec	Bin	Dec
+				; 000 == 0		000 == 0	000	-8
+				; 001 == 1		001 == 1	001	-7
+				; 010 == 2		010 == 2	010	-6
+				; 011 == 3		011 == 3	011	-5
+				; 100 == 4		100 == -4	100	-4
+				; 101 == 5		101 == -3	101	-3
+				; 110 == 6		110 == -2	110	-2
+				; 111 == 7		111 == -1	111	-1
+				;
+				; Thus: -1 (signed) == 7 (unsigned), that is, MAX_3BIT.
+				; Thus: scasb executed 4 times, for 'a', 'b' 'c', NULL.
+				; Thus: rcx == -1 - 4.
+				; Thus: rcx == -5 == 011 in our 'negatives' universe.
+				; Thus: not rcx == 100 (binary) == 4 (abs(rcx) - 1) in
+				; our unsigned universe. See that?
+				;
+				; So there you go. This logic scales. ;)
+				;
+				; That is 4 with the NULL, but we don't want to count
+				; NULL for strlen.
 
 		dec rcx 	; Subtract 1, because we don't count the NULL.
-				; Thus: rcx - 1 == 2. There are two characters in the
-				; string, so that is the right answer.
+				; Thus: rcx - 1 == 3. There are three characters in the
+				; example string "abc", so that is the right answer. :)
 				;
-				; If there had been 3 characters, we'd have subtracted 1
-				; from 0, which, of course, equals -1, which as we know
-				; in unsigned two bits equals 3, so we'd have gotten 3.
-				;
-				; The things we'll do to avoid the jmp instruction. ;)
+				; The things we'll do to avoid the jmp instruction! ;)
 
 		mov rax, rcx 	; This is our return value. :)
 
