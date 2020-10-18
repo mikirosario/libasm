@@ -34,40 +34,39 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 				;
 				; I TOLD you it was convoluted. xD
 				;
-				; This is easier to understand if we imagine a three bit
-				; number and a three-character string "abc". ;p
+				; This is easier to understand if we imagine a two bit
+				; number and a two-character string "ab". ;p
 				;
-				; Let's imagine that we have three bit unsigned, three
-				; bit signed, and three bit negatives - where we treat
-				; every possible three bit value as a negative (That is
+				; Let's imagine that we have two bit unsigned, two
+				; bit signed, and two bit negatives - where we treat
+				; every possible two bit value as a negative (That is
 				; basically what we're doing here).
 				;
 				; Unsigned		Signed		Negatives
 				; Bin	Dec		Bin   Dec	Bin	Dec
-				; 000 == 0		000 == 0	000	-8
-				; 001 == 1		001 == 1	001	-7
-				; 010 == 2		010 == 2	010	-6
-				; 011 == 3		011 == 3	011	-5
-				; 100 == 4		100 == -4	100	-4
-				; 101 == 5		101 == -3	101	-3
-				; 110 == 6		110 == -2	110	-2
-				; 111 == 7		111 == -1	111	-1
+				; 00 == 0		00 == 0		00	-4
+				; 01 == 1		01 == 1		01	-3
+				; 10 == 2		10 == -2	10	-2
+				; 11 == 3		11 == -1	11	-1
 				;
-				; Thus: -1 (signed) == 7 (unsigned), that is, MAX_3BIT.
-				; Thus: scasb executed 4 times, for 'a', 'b' 'c', NULL.
-				; Thus: rcx == -1 - 4.
-				; Thus: rcx == -5 == 011 in our 'negatives' universe.
-				; Thus: not rcx == 100 (binary) == 4 (abs(rcx) - 1) in
-				; our unsigned universe. See that?
+				; Thus: -1 (signed) == 3 (unsigned), that is, MAX_2BIT.
+				; Thus: scasb executed 3 times, for 'a', 'b' and NULL.
+				; Thus: rcx == -1 - 3.
+				; Thus: rcx == -4 == 00 in our 'negatives' universe.
+				; Thus: not rcx == 11 (binary) == 3 in our unsigned
+				; universe. See that? 4 - 1, so the absolute value
+				; of -4 less one.
 				;
-				; So there you go. This logic scales. ;)
+				; So there you go. This logic scales. Try it. ;)
 				;
-				; That is 4 with the NULL, but we don't want to count
+				; This gives us the number of times scasb executed.
+				;
+				; That is 3 with the NULL, but we don't want to count
 				; NULL for strlen.
 
 		dec rcx 	; Subtract 1, because we don't count the NULL.
-				; Thus: rcx - 1 == 3. There are three characters in the
-				; example string "abc", so that is the right answer. :)
+				; Thus: rcx - 1 == 2. There are two characters in the
+				; example string "ab", so that is the right answer. :)
 				;
 				; The things we'll do to avoid the jmp instruction! ;)
 
