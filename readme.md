@@ -43,11 +43,11 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 				; basically what we're doing here).
 				;
 				; Unsigned		Signed		Negatives
-				; Bin	Dec		Bin   Dec	Bin	Dec
-				; 00 == 0		00 == 0		00	-4
-				; 01 == 1		01 == 1		01	-3
-				; 10 == 2		10 == -2	10	-2
-				; 11 == 3		11 == -1	11	-1
+				; Bin	Dec		Bin   Dec	Bin   Dec
+				; 00 == 0		00 == 0		00 == -4
+				; 01 == 1		01 == 1		01 == -3
+				; 10 == 2		10 == -2	10 == -2
+				; 11 == 3		11 == -1	11 == -1
 				;
 				; Thus: -1 (signed) == 3 (unsigned), that is, MAX_2BIT.
 				; Thus: scasb executed 3 times, for 'a', 'b' and NULL.
