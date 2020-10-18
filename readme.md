@@ -29,7 +29,7 @@ This strlen is a bit convoluted to understand, but it avoids branching instructi
 				;
 				; Hence: not rcx == abs(rcx) - 1. So if we went through
 				; the loop three times: rcx == -1 - 3 == -4. Then:
-				; not rcx == 3. Since that includes the null, 3 - 1 is
+				; not rcx == 3! Since that includes the null, 3 - 1 is
 				; our string length.
 				;
 				; I TOLD you it was convoluted. xD
