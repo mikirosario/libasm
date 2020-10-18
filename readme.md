@@ -272,7 +272,7 @@ be set.
 
 		mov	rbx, rdi		; Save poor, defenceless src pointer from
 						; ravages of getting clobbered by passing it to the
-						; preserved pointer. This is a just copy, so it will
+						; preserved register. This is a just copy, so it will
 						; still be in the rdi register, which as we know is
 						; the first register we assume that an argument is
 						; passed into per our Calling Convention...
