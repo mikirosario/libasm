@@ -143,7 +143,7 @@ character strings of unknown length.
 						; into the lower byte of the rcx register (cl).
 	
 		cmp		byte [rdi], cl	; Compare that character with the character
-						; pointed to by dst (rdi). this really the same as
+						; pointed to by dst (rdi). This really the same as
 						; sub [rdi], cl, except we don't store the result,
 						; we just set the flags.
 
@@ -184,7 +184,7 @@ character strings of unknown length.
 	return:
 		mov		al, byte [rdi]	; If we need to return a non-zero result, it
 						; will be *dst - *src. First we copy the character
-						; pointer to by rdi to the lower byte of rax (al).
+						; pointed to by rdi to the lower byte of rax (al).
 						; Note this will do nothing to the higher bytes,
 						; which might still hold junk...
 
