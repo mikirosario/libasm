@@ -6,7 +6,7 @@
 /*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/17 21:20:19 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/18 20:53:37 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
+#include <string.h>
 
 # define BLUE "\033[1;34m"
 # define GREEN "\033[0;32m"
@@ -30,7 +31,7 @@ ssize_t ft_read(int fd, void *buf, size_t count);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strcpy(char *dst, const char *src);
 int		ft_isspace(int c);
-
+char	*ft_strchr(char const *s, int c);
 
 void	errorcheck(int returnvalue)
 {
@@ -223,5 +224,10 @@ int	main(void)
 	printf("\nT: %d, N: %d, V: %d, F: %d, R: %d, Sp: %d\n", '\t', '\n', '\v', '\f', '\r', ' ');
 	printf("\nMy Isspace: %d\n", ft_isspace('b'));
 	printf("C's Isspace: %d\n", isspace('b'));
+
+
+	printf("\nMy Strchr: %s\n", ft_strchr("find", 'l'));
+	//ft_strchr("find", 'p');
+	printf("\nC's Strchr: %s\n", strchr("find", 'l'));
 	return (0);
 }

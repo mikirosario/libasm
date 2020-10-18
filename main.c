@@ -6,7 +6,7 @@
 /*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/17 21:15:20 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/18 18:13:30 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,5 @@ int	main(void)
 	teststrcmp("TEST", "Tost");
 	teststrcpy(mydst, cdst, "Nivram");
 	teststrdup("¡Albricias!");
-
 	return (0);
 }
