@@ -1,0 +1,16 @@
+global	_ft_list_size
+
+section	.text
+	_ft_list_size:
+		zerorax:
+			xor	rax, rax
+	
+		listsize:
+			cmp	rdi, 0
+			je	return
+			inc rax
+			mov	rdi, [rdi + 8]
+			jmp listsize
+
+		return:
+			ret

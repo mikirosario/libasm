@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/19 16:42:00 by miki             ###   ########.fr       */
+/*   Updated: 2020/10/19 20:58:26 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,201 +52,34 @@ void	errorcheck(int returnvalue)
 	}
 }
 
-/*
-** This is a read tester that tests my ft_read against C's read. It uses a test
-** file called poem.txt where I poured my heart out. I will be deeply offended
-** if you laugh at my poetry. It prints out the poem to terminal using both my
-** and C's read.
-**
-** If you set fd at 0 it will open the file and get the real fd. If you send
-** any other fd it will use -1 to test the fd error.
-**
-** If you set buf at 0 it will use the address of a char as the buf. If you
-** set it at any other number, it will use a NULL pointer as buf to test the bad
-** address error.
-**
-** If you set bytes at 0, it will use a single byte as its buffer. If you set
-** it at any other number, it will use -1 as the bytes to read, to test the bad
-** argument error.
-**
-*/
-
-void	testread(int fd, int badbuf, int bytes)
-{
-	char	c;
-	char	*buf;
-	int		res;
-
-	res = 0;
-	fd = !fd ? open("poem.txt", O_RDONLY) : -1;
-	buf = !badbuf ? &c : NULL;
-	bytes = !bytes ? 1 : -1;
-	ft_write(1, GREEN"\n\nMy Read:\n", 10 + sizeof(GREEN));
-	while ((res = ft_read(fd, buf, bytes)) > 0)
-		if (*buf)
-			printf("%c", *buf);
-	errorcheck(res);
-	lseek(fd, 0, SEEK_SET);
-	write(1, BLUE"\nC's Read:\n", 11 + sizeof(BLUE));
-	while ((res = read(fd, buf, bytes)) > 0)
-		if (*buf)
-			printf("%c", *buf);
-	errorcheck(res);
-	if (fd > 2)
-		close(fd);
-	write(1, RESET, sizeof(RESET));
-}
-
-/*
-** You send fd, string and bytes to both ft_write and write, and it prints the
-** result (bytes written) as well as doing the write. If you send bad parameters
-** (-1 or NULL string), it will refer to errno and print the associated errors
-** for both functions.
-**
-** The errors will be printed just after the writes to ensure they're valid.
-** Then the results are printed.
-**
-** Note, if the bytes (third) parameter is bad, MacOSX syscall will throw a
-** Bad parameter error, whilst Ubuntu Linux will, weirdly, throw a Bad address
-** error. Don't fault the messenger, I'm just a go-between. ;)
-*/
-
-void	testwrite(int fd, char *string, int bytes)
-{
-	int res;
-
-	ft_write(1, GREEN, sizeof(GREEN));
-	printf("\n\nMy Write:\n");
-	res = ft_write(fd, string, bytes);
-	errorcheck(res);
-	printf("ft_write result: %d\n", res);
-	ft_write(1, BLUE, sizeof(BLUE));
-	printf("\nC's Write:\n");
-	res = write(fd, string, bytes);
-	errorcheck(res);
-	printf("C write result: %d\n", res);
-	ft_write(1, RESET, sizeof(RESET));
-}
-
-/*
-** Behaviour with a NULL string is undefined in both strlen and ft_strlen. On
-** MacOSX it results in a segfault.
-*/
-
-void	teststrlen(char *string)
-{
-	write(1, GREEN, sizeof(GREEN));
-	printf("\nMy Strlen:\nft_strlen result: %zu\n", ft_strlen(string));
-	write(1, BLUE, sizeof(BLUE));
-	printf("\nC's Strlen\nC strlen result: %zu\n", strlen(string));
-	write(1, RESET, sizeof(RESET));
-}
-
-void	teststrcmp(char *s1, char *s2)
-{
-	ft_write(1, GREEN, sizeof(GREEN));
-	printf("\n\nMy Strcmp:\n%d\n", ft_strcmp(s1, s2));
-	write(1, BLUE, sizeof(BLUE));
-	printf("\nC's Strcmp:\n%d\n", strcmp(s1, s2));
-	write(1, RESET, sizeof(RESET));
-}
-
-/*
-** We pass two pointers to destination strings defined in the main, and a
-** source string from which to copy, then print the destination strings after
-** the copy is made. We do the copy first with my ft_strcpy and copy to mydst,
-** then with C's strcpy and copy to cdst.
-*/
-
-void	teststrcpy(char *mydst, char *cdst, char *src)
-{
-	ft_write(1, GREEN, sizeof(GREEN));
-	ft_strcpy(mydst, src);
-	printf("\n\nMy Strcpy:\n%s\n", mydst);
-	write(1, BLUE, sizeof(BLUE));
-	strcpy(cdst, src);
-	printf("\nC's Strcpy:\n%s\n", cdst);
-	write(1, RESET, sizeof(RESET));
-}
-
-/*
-** We pass a source string to the function and use both ft_strdup (first) and
-** strdup (second) to do a copy, print the copy and, of course, free the copy.
-** If the copy fails both functions should set an ENOMEM error in errno. This
-** can be tested for my function, but the only way I know to do it currently
-** is modifying the strdup source code before compilation to throw the error
-** in case of success, so as to force it onto the error branch. I can't do that
-** for the original strdup, of course (well, I mean... I COULD attempt to hack
-** the binary, I guess... but I don't know, it seems just a tad overkill. xD).
-**
-** As with some other functions, there is no protection against NULL strings in
-** the original strdup, so there is also no such protection in ft_strdup. The
-** behaviour in that case is undefined, and in MacOSX it leads to a predictable
-** segfault.
-**
-** If anyone knows a more elegant way to test the malloc failure condition,
-** please do enlighten me!
-*/
-
-void	teststrdup(char *src)
-{
-	char *cpy;
-	cpy = ft_strdup(src);
-	ft_write(1, GREEN, sizeof(GREEN));
-	printf("\n\nMy Strdup:\n");
-	if (cpy)
-	{
-		printf("%s\n", cpy);
-		free(cpy);
-		cpy = NULL;
-	}
-	else
-		perror(0);
-	cpy = strdup(src);
-	write(1, BLUE, sizeof(BLUE));
-	printf("\nC's Strdup:\n");
-	if (cpy)
-	{
-		printf("%s\n", cpy);
-		free(cpy);
-		cpy = NULL;
-	}
-	else
-		perror(0);
-	write(1, RESET, sizeof(RESET));
-}
 
 int	main(void)
 {
-	char *string;
-	char mydst[] = {"Marvin"};
-	char cdst[] = {"Marvin"};
 	char data[] = {"Canario"};
 	char masdata[] = {"Estepario"};
 	t_list	*list;
-
-	string = "Hello, world!\n";
 	ft_write(1, "\n", 1);
-	teststrlen(string);
-	testwrite(0, string, ft_strlen(string));
-	testread(0, 0, 0);
-	teststrcmp("TEST", "Tost");
-	teststrcpy(mydst, cdst, "Nivram");
-	teststrdup("¡Albricias!");
 
-	printf("\nT: %d, N: %d, V: %d, F: %d, R: %d, Sp: %d\n", '\t', '\n', '\v', '\f', '\r', ' ');
-	printf("\nMy Isspace: %d\n", ft_isspace(' '));
-	printf("C's Isspace: %d\n", isspace(' '));
-
-
-	printf("\nMy Strchr: %s\n", ft_strchr("find", 'f'));
-	//ft_strchr("find", 'p');
+	printf("\nT: %d, N: %d, V: %d, F: %d, R: %d, Sp: %d\n", '\t', '\n', '\v', \
+	'\f', '\r', ' ');
+	write(1, GREEN, sizeof(GREEN));
+	printf("\n\nMy Isspace: %d\n", ft_isspace(' '));
+	write(1, BLUE, sizeof(BLUE));
+	printf("\nC's Isspace: %d\n", isspace(' '));
+	write(1, GREEN, sizeof(GREEN));
+	printf("\n\nMy Strchr: %s\n", ft_strchr("find", 'f'));
+	printf("My Strchr: %s\n", ft_strchr("find", 'p'));
+	write(1, BLUE, sizeof(BLUE));
 	printf("\nC's Strchr: %s\n", strchr("find", 'f'));
-	printf("\nFT_ATOI: %d\n", ft_atoi_base("--++-+11010100010101basurilla", "01"));
+	printf("C's Strchr: %s \n", strchr("find", 'p'));
+	write(1, GREEN, sizeof(GREEN));
+	printf("\n\nMy Ft_atoi_base: %d\n", ft_atoi_base("--++-+11010100010101basurilla", "01"));
+	printf("\n\nMy Ft_atoi_base: %d\n", ft_atoi_base("--++-+-2147483648basurilla", "0123456789"));
 	list = ft_create_elem(masdata);
 	ft_list_push_front(&list, data);
-	printf("\nPrint Data through Struct: %s, %s\n", (char *)list->data, (char *)list->next->data);
-	printf("\nList Length: %d\n", ft_list_size(list));
+	printf("\n\nMy Linked List: %s, %s\n", (char *)list->data, (char *)list->next->data);
+	printf("\n\nMy List Length: %d\n", ft_list_size(list));
+	write(1, RESET, sizeof(RESET));
 	while (list)
 	{
 		free(list);

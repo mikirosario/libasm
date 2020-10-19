@@ -18,5 +18,5 @@ section .text
 	dec 	rdi
 	cmp		ecx, 0
 	cmovne	rax, rdi
-	cmove	eax, ecx
+	cmove	rax, rcx
 	ret
