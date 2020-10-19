@@ -6,7 +6,7 @@
 #    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/19 02:36:10 by miki             ###   ########.fr        #
+#    Updated: 2020/10/19 08:17:28 by miki             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,11 @@ TEST = a.out
 
 SRC = ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s
 
-BSRC = ft_isspace.s ft_strchr.s
+BSRC = ft_isspace_bonus.s ft_strchr_bonus.s ft_atoi_base_bonus.s
 
 LSRC = ft_strlen_linux.s ft_write_linux.s ft_read_linux.s ft_strcmp_linux.s ft_strcpy_linux.s ft_strdup_linux.s
 
-LBSRC = ft_isspace_linux.s ft_strchr_linux.s ft_atoi_base_linux.s
+LBSRC = ft_isspace_linux_bonus.s ft_strchr_linux_bonus.s ft_atoi_base_linux_bonus.s
 
 ifeq ($(UNAME), Darwin)
 FLAGS = -o $(TEST) -Wall -Werror -Wextra
