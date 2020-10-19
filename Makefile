@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
+#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/18 18:04:36 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/19 02:36:10 by miki             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ BSRC = ft_isspace.s ft_strchr.s
 
 LSRC = ft_strlen_linux.s ft_write_linux.s ft_read_linux.s ft_strcmp_linux.s ft_strcpy_linux.s ft_strdup_linux.s
 
-LBSRC = 
+LBSRC = ft_isspace_linux.s ft_strchr_linux.s ft_atoi_base_linux.s
 
 ifeq ($(UNAME), Darwin)
 FLAGS = -o $(TEST) -Wall -Werror -Wextra

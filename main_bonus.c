@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/18 20:53:37 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/19 07:04:15 by miki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strcpy(char *dst, const char *src);
 int		ft_isspace(int c);
 char	*ft_strchr(char const *s, int c);
+int		ft_atoi_base(char *str, char *base);
 
 void	errorcheck(int returnvalue)
 {
@@ -222,12 +223,14 @@ int	main(void)
 	teststrdup("¡Albricias!");
 
 	printf("\nT: %d, N: %d, V: %d, F: %d, R: %d, Sp: %d\n", '\t', '\n', '\v', '\f', '\r', ' ');
-	printf("\nMy Isspace: %d\n", ft_isspace('b'));
-	printf("C's Isspace: %d\n", isspace('b'));
+	printf("\nMy Isspace: %d\n", ft_isspace(' '));
+	printf("C's Isspace: %d\n", isspace(' '));
 
 
-	printf("\nMy Strchr: %s\n", ft_strchr("find", 'l'));
+	printf("\nMy Strchr: %s\n", ft_strchr("find", 'f'));
 	//ft_strchr("find", 'p');
-	printf("\nC's Strchr: %s\n", strchr("find", 'l'));
+	printf("\nC's Strchr: %s\n", strchr("find", 'f'));
+	printf("\nFT_ATOI: %d\n", ft_atoi_base("--++-+11010100010101basurilla", "01"));
+
 	return (0);
 }

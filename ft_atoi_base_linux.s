@@ -1,10 +1,10 @@
-global _ft_atoi_base
-extern _ft_strchr
-extern _ft_isspace
-extern _ft_strlen
+global ft_atoi_base
+extern ft_strchr
+extern ft_isspace
+extern ft_strlen
 
 section .text
-	_ft_atoi_base:
+	ft_atoi_base:
 		preliminaries:
 			xor		rax, rax
 			push	r15
@@ -25,7 +25,7 @@ section .text
 		
 		badbasechar:
 			mov		dil, byte [r12]
-			call	_ft_isspace
+			call	ft_isspace
 			cmp		rax, 0
 			jne		return
 			inc		r12
@@ -33,12 +33,12 @@ section .text
 			jne		badbasechar
 			mov 	rdi, r15
 			mov		rsi, 43
-			call	_ft_strchr
+			call	ft_strchr
 			cmp		rax, 0
 			jne		return
 			mov		rdi, r15
 			mov		rsi, 45
-			call	_ft_strchr
+			call	ft_strchr
 			cmp		rax, 0
 			jne		return
 			xor		rcx, rcx
@@ -60,7 +60,7 @@ section .text
 
 		base:
 			mov		rdi, r15
-			call	_ft_strlen
+			call	ft_strlen
 			cmp		rax, 2
 			jl		return
 			mov		r12, rax
@@ -68,7 +68,7 @@ section .text
 
 		whitespace:
 			mov		dl, byte [r14]
-			call	_ft_isspace
+			call	ft_isspace
 			inc		r14
 			cmp		rax, 0
 			jne		whitespace
@@ -95,7 +95,7 @@ section .text
 			xor		rsi, rsi
 			mov		rdi, r15
 			mov		sil, byte [r14]
-			call	_ft_strchr
+			call	ft_strchr
 			cmp		rax, 0
 			je		return
 			sub		rax, r15
