@@ -570,7 +570,7 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 							; worse than using a minus sign. Whatever
 							; will we do? Will no one save us?
 
-			mov		r11, r1		; We need a SECOND temporary pointer for a
+			mov		r11, r12	; We need a SECOND temporary pointer for a
 							; plot THIS fiendish and dastardly...
 
 			mov		cl, byte [r12]	; We copy the byte pointed to by the first
