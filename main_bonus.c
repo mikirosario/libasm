@@ -6,7 +6,7 @@
 /*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/19 07:04:15 by miki             ###   ########.fr       */
+/*   Updated: 2020/10/19 16:42:00 by miki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
+typedef struct		s_list
+ {
+	 void			*data;
+	 struct	s_list	*next;
+ }					t_list;
+
 size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
 ssize_t	ft_write(int fd, const void *buf, size_t nbyte);
@@ -33,6 +39,9 @@ char	*ft_strcpy(char *dst, const char *src);
 int		ft_isspace(int c);
 char	*ft_strchr(char const *s, int c);
 int		ft_atoi_base(char *str, char *base);
+t_list	*ft_create_elem(void *data);
+void	ft_list_push_front(t_list **begin_list, void *data);
+int		ft_list_size(t_list *begin_list );
 
 void	errorcheck(int returnvalue)
 {
@@ -212,6 +221,9 @@ int	main(void)
 	char *string;
 	char mydst[] = {"Marvin"};
 	char cdst[] = {"Marvin"};
+	char data[] = {"Canario"};
+	char masdata[] = {"Estepario"};
+	t_list	*list;
 
 	string = "Hello, world!\n";
 	ft_write(1, "\n", 1);
@@ -231,6 +243,14 @@ int	main(void)
 	//ft_strchr("find", 'p');
 	printf("\nC's Strchr: %s\n", strchr("find", 'f'));
 	printf("\nFT_ATOI: %d\n", ft_atoi_base("--++-+11010100010101basurilla", "01"));
-
+	list = ft_create_elem(masdata);
+	ft_list_push_front(&list, data);
+	printf("\nPrint Data through Struct: %s, %s\n", (char *)list->data, (char *)list->next->data);
+	printf("\nList Length: %d\n", ft_list_size(list));
+	while (list)
+	{
+		free(list);
+		list = list->next;
+	}
 	return (0);
 }

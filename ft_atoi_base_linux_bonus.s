@@ -12,6 +12,7 @@ section .text
 			push	r13
 			push	r12
 			push	rbx
+			push	rbp ; stack alignment?
 			mov		r15, rsi
 			mov		r14, rdi
 			xor		rdi, rdi
@@ -110,6 +111,7 @@ section .text
 		return:
 			mov		rax, rbx
 			mul		r13
+			pop		rbp
 			pop		rbx
 			pop		r12
 			pop		r13
