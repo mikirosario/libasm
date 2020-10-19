@@ -385,49 +385,49 @@ My second branch-free function. xD
 
 	xor		rcx, rcx		; Clear rcx.
 
-	push	rdi				; Save rdi address *s to stack.
+	push		rdi			; Save rdi address *s to stack.
 
-	push	rsi				; Save rsi int c to stack.
+	push		rsi			; Save rsi int c to stack.
 
-	call	_ft_strlen		; Get strlen of *s in rax.
+	call		_ft_strlen		; Get strlen of *s in rax.
 
-	pop		rsi				; Get rsi int c back from stack in rsi.
+	pop		rsi			; Get rsi int c back from stack in rsi.
 
-	pop		rdi				; Get rdi address *s back from stack in rdi.
+	pop		rdi			; Get rdi address *s back from stack in rdi.
 
-	mov 	ecx, eax		; Copy strlen of rdi into ecx. Ecx == 0 is scasb
-							; exit condition 1.
+	mov 		ecx, eax		; Copy strlen of rdi into ecx. Ecx == 0 is scasb
+						; exit condition 1.
 
 	mov		eax, esi		; Copy int c into eax for scasb exit condition 2
-							; (We'll just be looking at the low byte, but it's
-							; OK, even though it's an int, we're passing ASCII
-							; code).
+						; (We'll just be looking at the low byte, but it's
+						; OK, even though it's an int, we're passing ASCII
+						; code).
 
 	add		ecx, 1			; Increase ecx by 1 to add the NULL.
 
-	cld						; Clear direction flag so we increment strings.
+	cld					; Clear direction flag so we increment strings.
 
-	repne	scasb			; Repeat scasb to scan the string. While ecx--
-							; (strlen--) != 0 and [rdi--] (*s--) != eax/al.
+	repne		scasb			; Repeat scasb to scan the string. While ecx--
+						; (strlen--) != 0 and [rdi--] (*s--) != eax/al.
 
-	dec 	rdi				; Scasb raises rdi after every comparison, even if
-							; the comparison is false, so rdi ends up one byte
-							; higher than it should be.
+	dec 		rdi			; Scasb raises rdi after every comparison, even if
+						; the comparison is false, so rdi ends up one byte
+						; higher than it should be.
 
 	cmp		ecx, 0			; If ecx == 0, we left because we checked the whole
-							; string...
+						; string...
 
-	cmovne	rax, rdi		; If we didn't leave because of ecx, we left because
-							; there was a match with eax (int c), so we found
-							; int c in *s, so we return the address to that
-							; char in the string, which will be rdi.
+	cmovne		rax, rdi		; If we didn't leave because of ecx, we left because
+						; there was a match with eax (int c), so we found
+						; int c in *s, so we return the address to that
+						; char in the string, which will be rdi.
 
-	cmove	eax, ecx		; Otherwise, we return 0, which is what ecx should
-							; be. Convenient, since we can't cmov immediates. ;)
-							; Note that a 32 bit mov zeros the top bytes of a
-							; register. Or at least that's what Creel told me.
+	cmove		eax, ecx		; Otherwise, we return 0, which is what ecx should
+						; be. Convenient, since we can't cmov immediates. ;)
+						; Note that a 32 bit mov zeros the top bytes of a
+						; register. Or at least that's what Creel told me.
 
-	ret						; Strchr Returns.
+	ret					; Strchr Returns.
 
 
 FT_ATOI_BASE
@@ -439,46 +439,46 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 
 	_ft_atoi_base:
 		preliminaries:				; We'll do preparatory stuff here, like
-									; saving all our preserved registers on the
-									; stack, because I use all of them.
+							; saving all our preserved registers on the
+							; stack, because I use all of them.
 
-			xor		rax, rax		; Let's clear rax.
+			xor		rax, rax	; Let's clear rax.
 
-			push	r15				; Save r15. We will use it to store the
-									; pointer to base (*base).
+			push		r15		; Save r15. We will use it to store the
+							; pointer to base (*base).
 
-			push	r14				; Save r14. We will use it to store the
-									; pointer to str (*str).
+			push		r14		; Save r14. We will use it to store the
+							; pointer to str (*str).
 
-			push	r13				; Save r13. We will use it to store the
-									; sign.
+			push		r13		; Save r13. We will use it to store the
+							; sign.
 
-			push	r12				; Save r12. We will use it first as a temp
-									; pointer, and ultimately to store the base.
-									; Not the pointer to the base, the numerical
-									; base, as in base 10, base 2, base 16, etc.
+			push		r12		; Save r12. We will use it first as a temp
+							; pointer, and ultimately to store the base.
+							; Not the pointer to the base, the numerical
+							; base, as in base 10, base 2, base 16, etc.
 
-			push	rbx				; Save rbx, as we will use it to store the
-									; result. ME USE ALL THE PRESERVED REGISTER
-									; MWAHAHAHA. Sorry about that, it's very
-									; late...
+			push		rbx		; Save rbx, as we will use it to store the
+							; result. ME USE ALL THE PRESERVED REGISTER
+							; MWAHAHAHA. Sorry about that, it's very
+							; late...
 
-			mov		r15, rsi		; We receive the pointer to the base *base
-									; as the second argument, so in rsi. Now
-									; that we preserved the registers that fall
-									; under our responsibility in the Calling
-									; Convention, we will save it to r15.
+			mov		r15, rsi	; We receive the pointer to the base *base
+							; as the second argument, so in rsi. Now
+							; that we preserved the registers that fall
+							; under our responsibility in the Calling
+							; Convention, we will save it to r15.
 
-			mov		r14, rdi		; We receive the pointer to the numerical
-									; string *str as the first argument, so in
-									; rdi. We will save it to r14.
+			mov		r14, rdi	; We receive the pointer to the numerical
+							; string *str as the first argument, so in
+							; rdi. We will save it to r14.
 
-			xor		rdi, rdi		; With that done, clear rdi.
+			xor		rdi, rdi	; With that done, clear rdi.
 
-			xor		r13, r13 		; Clear r13, as we'll need it nice and
-									; zeroed.
+			xor		r13, r13 	; Clear r13, as we'll need it nice and
+							; zeroed.
 
-			xor		rbx, rbx		; Let's set rbx (our result) to zero too.
+			xor		rbx, rbx	; Let's set rbx (our result) to zero too.
 
 	; So! The piscine ft_atoi_base subject specifies we need to return 0 in case
 	; of an error with the base, such as repeated symbols, use of '+' or '-', or
@@ -490,353 +490,353 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 	; And we ARE talking about a number function that returns 0 for an error.
 	; Eh. ANYWAY...
 
-		nullcheck:					; We need to make sure our base doesn't
-									; point to a null character. Simple enough.
+		nullcheck:				; We need to make sure our base doesn't
+							; point to a null character. Simple enough.
 
 			cmp		byte [r15], 0	; SO, if r15, our pointer to the base,
-									; points to a null... well...
+							; points to a null... well...
 
-			je		return			; That's all she wrote. Fortunately for
-									; us, 0*0 is zero, so when we multiply
-									; rbx*r13 for the return value, we are
-									; definitely getting a big, fat ZERO, just
-									; as the subject demands. ;) Now you see
-									; why I insisted on zeroing them right away.
+			je		return		; That's all she wrote. Fortunately for
+							; us, 0*0 is zero, so when we multiply
+							; rbx*r13 for the return value, we are
+							; definitely getting a big, fat ZERO, just
+							; as the subject demands. ;) Now you see
+							; why I insisted on zeroing them right away.
 
-			mov		r12, r15		; Now let's copy the pointer to the *base to
-									; r12 for now. It will be a tmp pointer to
-									; the base. You'll see why. It is not going
-									; to be pretty... You've been warned. xD
+			mov		r12, r15	; Now let's copy the pointer to the *base to
+							; r12 for now. It will be a tmp pointer to
+							; the base. You'll see why. It is not going
+							; to be pretty... You've been warned. xD
 		
 		badbasechar:				; We need to check the base string for bad
-									; chars, like '+', '-' or spaces.
+							; chars, like '+', '-' or spaces.
 
 			mov		dil, byte [r12]	; Move the character pointed to by the temp
-									; pointer to *base into the lower byte of
-									; rdi, to pass it to isspace.
+							; pointer to *base into the lower byte of
+							; rdi, to pass it to isspace.
 
-			call	ft_isspace		; Now for the result...
+			call		_ft_isspace	; Now for the result...
 
-			cmp		rax, 0			; If it's non-zero, it's a space.
+			cmp		rax, 0		; If it's non-zero, it's a space.
 
-			jne		return			; NO SPACE!!!! SPACE IS A LIE!!!! NASA MEANS
-									; RETURN IN HEBREW!! Oops, sorry about that.
-									; I don't know what has gotten into me.
+			jne		return		; NO SPACE!!!! SPACE IS A LIE!!!! NASA MEANS
+							; RETURN IN HEBREW!! Oops, sorry about that.
+							; I don't know what has gotten into me.
 
-			inc		r12				; Increment r12 tmp *base pointer.
+			inc		r12		; Increment r12 tmp *base pointer.
 
 			cmp		byte [r12], 0	; Compare the char it points to with 0.
 
-			jne		badbasechar		; If we haven't reached the null termination
-									; yet, keep making sure it's not... SPACE.
+			jne		badbasechar	; If we haven't reached the null termination
+							; yet, keep making sure it's not... SPACE.
 
-			mov 	rdi, r15		; We're only just getting started. EVEN if
-									; it's TRUE you don't have spaces... what if
-									; you have... a '+' sign or a '-' sign!? o_o
-									; Forsooth! Pass the pointer to the *base
-									; into rdi pls...
+			mov	 	rdi, r15	; We're only just getting started. EVEN if
+							; it's TRUE you don't have spaces... what if
+							; you have... a '+' sign or a '-' sign!? o_o
+							; Forsooth! Pass the pointer to the *base
+							; into rdi pls...
 
-			mov		rsi, 43			; ...and 43, ASCII for '+', into rsi...
+			mov		rsi, 43		; ...and 43, ASCII for '+', into rsi...
 
-			call	ft_strchr		; Who you gonna call? Sign busters!
+			call		_ft_strchr	; Who you gonna call? Sign busters!
 
-			cmp		rax, 0			; If we don't have a zero in rax...
+			cmp		rax, 0		; If we don't have a zero in rax...
 
-			jne		return			; ...we found a plus! Terminate! Terminate!
+			jne		return		; ...we found a plus! Terminate! Terminate!
 
-			mov		rdi, r15		; Now for the minus...
+			mov		rdi, r15	; Now for the minus...
 
-			mov		rsi, 45			; That's ASCII for '-'...
+			mov		rsi, 45		; That's ASCII for '-'...
 
-			call	ft_strchr		; Bill Murray was funnier in the sequel.
+			call		_ft_strchr	; Bill Murray was funnier in the sequel.
 
-			cmp		rax, 0			; Better be a zero here too...
+			cmp		rax, 0		; Better be a zero here too...
 
-			jne		return			; ...or else!
+			jne		return		; ...or else!
 
-			xor		rcx, rcx		; Whew! Let's clear rcx...
+			xor		rcx, rcx	; Whew! Let's clear rcx...
 
-			mov		r12, r15		; r12, my old friend, I have need of your
-									; services once again... Bearer of the
-									; temporary pointer to the *base!
+			mov		r12, r15	; r12, my old friend, I have need of your
+							; services once again... Bearer of the
+							; temporary pointer to the *base!
 
 		dupbasechar:				; And now for the best part... we need to
-									; make sure there are no DUPLICATE chars in
-									; in the base. What kind of villainous
-									; pervert would even THINK to put duplicate
-									; characters in their base!? Why, it goes
-									; against the very essence of what any base
-									; should naturally aspire to be! That's even
-									; worse than using a minus sign. Whatever
-									; will we do? Will no one save us?
+							; make sure there are no DUPLICATE chars in
+							; in the base. What kind of villainous
+							; pervert would even THINK to put duplicate
+							; characters in their base!? Why, it goes
+							; against the very essence of what any base
+							; should naturally aspire to be! That's even
+							; worse than using a minus sign. Whatever
+							; will we do? Will no one save us?
 
-			mov		r11, r12		; We need a SECOND temporary pointer for a
-									; plot THIS fiendish and dastardly...
+			mov		r11, r1		; We need a SECOND temporary pointer for a
+							; plot THIS fiendish and dastardly...
 
 			mov		cl, byte [r12]	; We copy the byte pointed to by the first
-									; temp pointer to *base to low byte of rcx.
+							; temp pointer to *base to low byte of rcx.
 
-			inc		r12				; Increment the temporary pointer.
+			inc		r12		; Increment the temporary pointer.
 			
 
 		dupbaseloop:
-			inc		r11				; Increment the second temporary pointer,
-									; as we aren't interested in the first
-									; ocurrence, only subsequent ocurrences.
-									; So in the first instance of the loop, r11
-									; will point to the first char after the one
-									; we're checking (in cl), in the second
-									; instance it will point to the second char
-									; after the one in cl, and so on...
+			inc		r11		; Increment the second temporary pointer,
+							; as we aren't interested in the first
+							; ocurrence, only subsequent ocurrences.
+							; So in the first instance of the loop, r11
+							; will point to the first char after the one
+							; we're checking (in cl), in the second
+							; instance it will point to the second char
+							; after the one in cl, and so on...
 
 			cmp		cl, byte [r11]	; And we cmp that ****! That just means we
-									; subtract one from the other without saving
-									; the result, but setting the flags. My
-									; teacher taught me that any value
-									; subtracted from itself SHOULD return 0.
-									; ISN'T THAT RIGHT TEACHER? So if we find
-									; the same value elsewhere in the string,
-									; and we subtract it from itself, we'll get
-									; a ZERO, won't we? WON'T WE MADAFAKA? Damn
-									; right we will.
-									; 
-									; Pardon me, I don't know what has come over
-									; me. I seem to have gotten a case of the
-									; vapours...
+							; subtract one from the other without saving
+							; the result, but setting the flags. My
+							; teacher taught me that any value
+							; subtracted from itself SHOULD return 0.
+							; ISN'T THAT RIGHT TEACHER? So if we find
+							; the same value elsewhere in the string,
+							; and we subtract it from itself, we'll get
+							; a ZERO, won't we? WON'T WE MADAFAKA? Damn
+							; right we will.
+							; 
+							; Pardon me, I don't know what has come over
+							; me. I seem to have gotten a case of the
+							; vapours...
 
-			je		return			; Zero flag means when comparing the byte in
-									; cl against the byte pointed to by r11, the
-									; second temporary *base pointer, they were
-									; equal. So we leave! Otherwise, we continue
-									; checking cl against the rest of the string
-									; until we hit the null termination.
+			je		return		; Zero flag means when comparing the byte in
+							; cl against the byte pointed to by r11, the
+							; second temporary *base pointer, they were
+							; equal. So we leave! Otherwise, we continue
+							; checking cl against the rest of the string
+							; until we hit the null termination.
 
 			cmp		byte [r11], 0	; If the second temporary pointer isn't
-									; pointing to null yet, we still have
-									; characters left to check AGAINST.
+							; pointing to null yet, we still have
+							; characters left to check AGAINST.
 
-			jne		dupbaseloop		; So we go back to the first instruction of
-									; the r11 loop (the loop that increments the
-									; second temporary pointer) if r11 is not
-									; is not pointing to null yet. If it is
-									; pointing to null, we continue downward...
+			jne		dupbaseloop	; So we go back to the first instruction of
+							; the r11 loop (the loop that increments the
+							; second temporary pointer) if r11 is not
+							; is not pointing to null yet. If it is
+							; pointing to null, we continue downward...
 
 			cmp		byte [r12], 0	; If the first temporary pointer, r12, isn't
-									; pointing to null yet, we have characters
-									; left to check. If it is, it means both
-									; pointers are now at the null termination,
-									; so we've checked the whole string.
+							; pointing to null yet, we have characters
+							; left to check. If it is, it means both
+							; pointers are now at the null termination,
+							; so we've checked the whole string.
 
-			jne		dupbasechar		; If r11 reached the NULL and r12 has not,
-									; we need to get the next char - the one
-									; r12 is now pointing to, to check that one
-									; for duplicates also by cmping it with
-									; every subsequent char. If both r11 and r12
-									; reached the NULL, then we made it to the
-									; end, and there are no duplicates in the
-									; base. So we can continue... finally...
-									; I shed a single tear...
+			jne		dupbasechar	; If r11 reached the NULL and r12 has not,
+							; we need to get the next char - the one
+							; r12 is now pointing to, to check that one
+							; for duplicates also by cmping it with
+							; every subsequent char. If both r11 and r12
+							; reached the NULL, then we made it to the
+							; end, and there are no duplicates in the
+							; base. So we can continue... finally...
+							; I shed a single tear...
 
 		base:
-			mov		rdi, r15		; We need to know the base (as in, is it
-									; base 10, base 2, base 16, or what?). To
-									; see if it's valid (greater than 1), for
-									; one thing. But we also need to know it
-									; anyway to calculate the number. So, if not
-									; now, I ask you, WHEN? Now is the time,
-									; surely. Our base will be none other than
-									; strlen of *base! So we first pass the
-									; pointer to *base to rdi, so _ft_strlen
-									; can find it.
-									;
-									; Remember, we saved the pointer to the base
-									; in r15. How fortunate. ^_^
+			mov		rdi, r15	; We need to know the base (as in, is it
+							; base 10, base 2, base 16, or what?). To
+							; see if it's valid (greater than 1), for
+							; one thing. But we also need to know it
+							; anyway to calculate the number. So, if not
+							; now, I ask you, WHEN? Now is the time,
+							; surely. Our base will be none other than
+							; strlen of *base! So we first pass the
+							; pointer to *base to rdi, so _ft_strlen
+							; can find it.
+							;
+							; Remember, we saved the pointer to the base
+							; in r15. How fortunate. ^_^
 
-			call	ft_strlen		; Our base will now be in rax. Joy!
+			call		_ft_strlen	; Our base will now be in rax. Joy!
 
-			cmp		rax, 2			; But if it's less than 2, it's UNWORTHY!
+			cmp		rax, 2		; But if it's less than 2, it's UNWORTHY!
 
-			jl		return			; And we CAST IT INTO EXILE! SHAME! SHAME!
+			jl		return		; And we CAST IT INTO EXILE! SHAME! SHAME!
 
-			mov		r12, rax		; If it IS worthy, though, we will certainly
-									; not want to leave it in rax, as rax is an
-									; absolute bedlam of a register. o_o Let's
-									; save it to nice, loyal r12, instead. ^_^
+			mov		r12, rax	; If it IS worthy, though, we will certainly
+							; not want to leave it in rax, as rax is an
+							; absolute bedlam of a register. o_o Let's
+							; save it to nice, loyal r12, instead. ^_^
 
-			xor		rdi, rdi		; Let's clean up rdi.
+			xor		rdi, rdi	; Let's clean up rdi.
 
-		whitespace:					; We need to skip any whitespace at the
-									; beginning of the number string. Remember
-									; the number string? The string whose value
-									; we mean to calculate? The one we saved
-									; to r14 many aeons/CPU cycles ago? Oh never
-									; mind. Anyway, there is a number there,
-									; you know! It's why we're even here in the
-									; first place.
+		whitespace:				; We need to skip any whitespace at the
+							; beginning of the number string. Remember
+							; the number string? The string whose value
+							; we mean to calculate? The one we saved
+							; to r14 many aeons/CPU cycles ago? Oh never
+							; mind. Anyway, there is a number there,
+							; you know! It's why we're even here in the
+							; first place.
 
 			mov		dl, byte [r14]	; move the byte pointed to by *str into the
-									; low byte of rdi. We cleared the rest of it
-									; just above this block.
+							; low byte of rdi. We cleared the rest of it
+							; just above this block.
 
-			call	ft_isspace		; We can call ft_isspace to see if the byte
-									; in dl is a whitespace
+			call		_ft_isspace	; We can call ft_isspace to see if the byte
+							; in dl is a whitespace
 
-			inc		r14				; Increment the numerical *str pointer. This
-									; sets the zero flag, so needs to be done
-									; before the cmp.
+			inc		r14		; Increment the numerical *str pointer. This
+							; sets the zero flag, so needs to be done
+							; before the cmp.
 
-			cmp		rax, 0			; Ft_isspace returns 1 if the byte in dl is
-									; a whitespace, otherwise it returns zero.
+			cmp		rax, 0		; Ft_isspace returns 1 if the byte in dl is
+							; a whitespace, otherwise it returns zero.
 
-			jne		whitespace		; If a whitespace is found, loop back to the
-									; first whitespace instruction and check
-									; next byte in the string.
+			jne		whitespace	; If a whitespace is found, loop back to the
+							; first whitespace instruction and check
+							; next byte in the string.
 
-			dec		r14				; If a whitespace is not found, exit the
-									; loop. We always exit with the address
-									; higher than it should be... so we do need
-									; to decrement it. Coincidence? Or something
-									; more sinister? Anyway, now r14 will now
-									; point to the first non-whitespace char in
-									; the numerical *str. Hooray!
+			dec		r14		; If a whitespace is not found, exit the
+							; loop. We always exit with the address
+							; higher than it should be... so we do need
+							; to decrement it. Coincidence? Or something
+							; more sinister? Anyway, now r14 will now
+							; point to the first non-whitespace char in
+							; the numerical *str. Hooray!
 
-			mov		rcx, 1			; My favourite scratch register! We'll move
-									; 1 into it for a cmov we're going to do.
-									; Because cmov doesn't get along with
-									; immediates.
+			mov		rcx, 1		; My favourite scratch register! We'll move
+							; 1 into it for a cmov we're going to do.
+							; Because cmov doesn't get along with
+							; immediates.
 
-			mov		rdx, -1			; We'll move -1 into rdx.
+			mov		rdx, -1		; We'll move -1 into rdx.
 
 		isawthesign:				; I'm still not ready! No me estreeeeses
-									; hermano. Me 'tas estresaaaaando. Now for
-									; the sign. These are piscine rules so we
-									; actually need to count the + signs and the
-									; - signs and compare how many of each there
-									; are to decide whether the number is
-									; positive or negative. xD.
+							; hermano. Me 'tas estresaaaaando. Now for
+							; the sign. These are piscine rules so we
+							; actually need to count the + signs and the
+							; - signs and compare how many of each there
+							; are to decide whether the number is
+							; positive or negative. xD.
 
-			xor		rax, rax		; First, clear rax.
+			xor		rax, rax	; First, clear rax.
 
 			cmp		byte [r14], 43	; Check for plus sign in *str.
 
-			cmove	rax, rcx 		; If plus sign, put a 1 in rax.
+			cmove		rax, rcx	; If plus sign, put a 1 in rax.
 
 			cmp		byte [r14], 45	; Check for minus sign in *str.
 
-			cmove	rax, rdx		; If minus sign, put a -1 in rax.
+			cmove		rax, rdx	; If minus sign, put a -1 in rax.
 
-			add		r13, rax		; Add rax to r13. You'll remember that we
-									; initialized r13 to 0, and it's a preserved
-									; register, so it's still 0, because I
-									; didn't call YOUR functions. I don't trust
-									; you to follow the Calling Convention. ;)
-									; So, if a positive sign is found, we add 1
-									; to the counter, and if a negative is
-									; found, we add -1 to the counter... If
-									; there are more negatives than positives at
-									; the end, it's negative, otherwise it's
-									; positive.
+			add		r13, rax	; Add rax to r13. You'll remember that we
+							; initialized r13 to 0, and it's a preserved
+							; register, so it's still 0, because I
+							; didn't call YOUR functions. I don't trust
+							; you to follow the Calling Convention. ;)
+							; So, if a positive sign is found, we add 1
+							; to the counter, and if a negative is
+							; found, we add -1 to the counter... If
+							; there are more negatives than positives at
+							; the end, it's negative, otherwise it's
+							; positive.
 
-			inc		r14				; Increment the numerical *str pointer
-									; whether we need it or not in true ASM
-									; fashion.
+			inc		r14		; Increment the numerical *str pointer
+							; whether we need it or not in true ASM
+							; fashion.
 
-			cmp		rax, 0			; If either a minus or plus sign was found,
-									; then rax will not be zero.
+			cmp		rax, 0		; If either a minus or plus sign was found,
+							; then rax will not be zero.
 
-			jne		isawthesign		; If non-zero was found in rax, repeat sign
-									; instructions on next char.
+			jne		isawthesign	; If non-zero was found in rax, repeat sign
+							; instructions on next char.
 
-			dec		r14 			; Otherwise, decrement *str pointer, because
-									; we didn't need to increment it. Now we'll
-									; know our sign and have r14 pointing at
-									; what should be the first actual number in
-									; the str!
+			dec		r14 		; Otherwise, decrement *str pointer, because
+							; we didn't need to increment it. Now we'll
+							; know our sign and have r14 pointing at
+							; what should be the first actual number in
+							; the str!
 
-			cmp		r13, 0			; if r13 is negative, the number is
-									; negative, otherwise the number is
-									; positive.
+			cmp		r13, 0		; if r13 is negative, the number is
+							; negative, otherwise the number is
+							; positive.
 
-			cmovl	r13, rdx		; So, if negative (i.e. less than 0), r13
-									; is -1.
+			cmovl		r13, rdx	; So, if negative (i.e. less than 0), r13
+							; is -1.
 
-			cmovge	r13, rcx		; If greater than or equal to 0, r13 is 1.
-									; Now we can just multiply it by the result
-									; to get our sign back. Woohoo!
+			cmovge		r13, rcx	; If greater than or equal to 0, r13 is 1.
+							; Now we can just multiply it by the result
+							; to get our sign back. Woohoo!
 
-		atoi:						; The main event! We'll use strchr to see
-									; which number each symbol of the base
-									; corresponds to, based on its position in
-									; the string. Position 0 == 0, position 1 ==
-									; 1, etc. 
+		atoi:					; The main event! We'll use strchr to see
+							; which number each symbol of the base
+							; corresponds to, based on its position in
+							; the string. Position 0 == 0, position 1 ==
+							; 1, etc. 
 
-			xor		rsi, rsi		; Let's clear rsi. It's good hygiene.
+			xor		rsi, rsi	; Let's clear rsi. It's good hygiene.
 
-			mov		rdi, r15		; First! We move the pointer to the
-									; *base into rdi, as that is strchr's first
-									; argument. That is in r15, as I'm SURE you
-									; remember. ;)
+			mov		rdi, r15	; First! We move the pointer to the
+							; *base into rdi, as that is strchr's first
+							; argument. That is in r15, as I'm SURE you
+							; remember. ;)
 
 			mov		sil, byte [r14]	; Next! We move the byte we are checking to
-									; rsi, as this is the second argument of
-									; strchr. That will be pointed to by the
-									; address we're saving in r14, of course!
-									; We move it into the low byte of rsi, which
-									; is called sil.
+							; rsi, as this is the second argument of
+							; strchr. That will be pointed to by the
+							; address we're saving in r14, of course!
+							; We move it into the low byte of rsi, which
+							; is called sil.
 
-			call	ft_strchr		; NOW! The real game begins... We CHECK
-									; to see where in the base (if anywhere)
-									; the symbol we are pointing to is located.
+			call		_ft_strchr	; NOW! The real game begins... We CHECK
+							; to see where in the base (if anywhere)
+							; the symbol we are pointing to is located.
 
-			cmp		rax, 0			; If the return address is null, it was not
-									; found.
+			cmp		rax, 0		; If the return address is null, it was not
+							; found.
 
-			je		return			; If it was not found, the number is over.
-									; Return.
+			je		return		; If it was not found, the number is over.
+							; Return.
 
-			sub		rax, r15		; We need to subtract the pointer to the
-									; first character in the base from the
-									; pointer returned by strchr to find the
-									; symbol's position in the base! Easy peasy,
-									; that's rax - r15. :) Rax now contains...
-									; OUR NUMBER! Ooooh.
+			sub		rax, r15	; We need to subtract the pointer to the
+							; first character in the base from the
+							; pointer returned by strchr to find the
+							; symbol's position in the base! Easy peasy,
+							; that's rax - r15. :) Rax now contains...
+							; OUR NUMBER! Ooooh.
 
-			mov		rcx, rax		; Let's put it in rcx for a second.
+			mov		rcx, rax	; Let's put it in rcx for a second.
 
-			mov		rax, rbx		; Now we just need a place to store our
-									; result. Can you think of any better place
-									; than rbx? I can't! Mainly because all the
-									; rest of the preserved registers are in
-									; use already. :p So let's move rbx (result)
-									; into rax.
+			mov		rax, rbx	; Now we just need a place to store our
+							; result. Can you think of any better place
+							; than rbx? I can't! Mainly because all the
+							; rest of the preserved registers are in
+							; use already. :p So let's move rbx (result)
+							; into rax.
 
-			mul		r12				; Remember our base (that is, the strlen of
-									; the base string)? We stored it in r12 for
-									; safekeeping. Time to bring it out of
-									; retirement! We multiply our (base) r12 by
-									; (result) rax.
+			mul		r12		; Remember our base (that is, the strlen of
+							; the base string)? We stored it in r12 for
+							; safekeeping. Time to bring it out of
+							; retirement! We multiply our (base) r12 by
+							; (result) rax.
 
-			add		rax, rcx		; And then we add OUR NUMBER! Our beautiful
-									; innocent, symbolized number!
+			add		rax, rcx	; And then we add OUR NUMBER! Our beautiful
+							; innocent, symbolized number!
 
-			mov		rbx, rax		; We store the result back in rbx, where it
-									; will be safe.
+			mov		rbx, rax	; We store the result back in rbx, where it
+							; will be safe.
 
-			inc		r14				; We increment r14, because we don't want to
-									; be at this forever...
+			inc		r14		; We increment r14, because we don't want to
+							; be at this forever...
 
-			jmp		atoi			; And we do it all... over... again...
+			jmp		atoi		; And we do it all... over... again...
 		
-		return:						; We're here! We're finally here!
+		return:					; We're here! We're finally here!
 
-			mov		rax, rbx		; We move our result into rax.
+			mov		rax, rbx	; We move our result into rax.
 
-			mul		r13				; Multiply by 1 or -1, depending on the
-									; sign. This should be our final answer.
+			mul		r13		; Multiply by 1 or -1, depending on the
+							; sign. This should be our final answer.
 
-			pop		rbx				; Not so fast! We have a ton of preserved
-									; registers to restore to their former
-									; glory...
+			pop		rbx		; Not so fast! We have a ton of preserved
+							; registers to restore to their former
+							; glory...
 
 			pop		r12
 
@@ -844,9 +844,9 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 
 			pop		r14
 
-			pop		r15				; That's better! But why am I suddenly in
-									; the mood for popcorn?
+			pop		r15		; That's better! But why am I suddenly in
+							; the mood for popcorn?
 
-			ret						; If I never see another atoi for as long
-									; as I live, it will be too soon! Back to
-									; you, caller.
+			ret				; If I never see another atoi for as long
+							; as I live, it will be too soon! Back to
+							; you, caller.
