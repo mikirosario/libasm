@@ -1,4 +1,4 @@
-IMPORTANT! This readme explains the MacOSX versions of these functions that are required for the 42 school project. The Linux versions can be quite different. Assembly is not known for its portability. xD
+IMPORTANT! This readme explains the MacOSX versions of these functions that are required for the 42 school project. The Linux versions can be different. Assembly is not known for its portability. xD
 
 FT_STRLEN
 
