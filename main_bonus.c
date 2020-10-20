@@ -6,7 +6,7 @@
 /*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/19 20:58:26 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/20 22:50:44 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		ft_atoi_base(char *str, char *base);
 t_list	*ft_create_elem(void *data);
 void	ft_list_push_front(t_list **begin_list, void *data);
 int		ft_list_size(t_list *begin_list );
+int		ft_list_sort(t_list **begin_list);
 
 void	errorcheck(int returnvalue)
 {
@@ -80,10 +81,13 @@ int	main(void)
 	printf("\n\nMy Linked List: %s, %s\n", (char *)list->data, (char *)list->next->data);
 	printf("\n\nMy List Length: %d\n", ft_list_size(list));
 	write(1, RESET, sizeof(RESET));
+	printf("\nTEST\n");
+	//printf("\n%d\n", ft_list_sort(&list));
 	while (list)
 	{
 		free(list);
 		list = list->next;
 	}
+
 	return (0);
 }
