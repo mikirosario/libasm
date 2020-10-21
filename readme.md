@@ -677,12 +677,14 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 							; you know! It's why we're even here in the
 							; first place.
 
-			mov		dl, byte [r14]	; move the byte pointed to by *str into the
+			mov		dil, byte [r14]	; move the byte pointed to by *str into the
 							; low byte of rdi. We cleared the rest of it
 							; just above this block.
+							; Second bug was caused by me confusing the low byte
+							; of rdx (dl) with the low byte of rdi (dil). ;)
 
 			call		_ft_isspace	; We can call ft_isspace to see if the byte
-							; in dl is a whitespace
+							; in dil is a whitespace
 
 			inc		r14		; Increment the numerical *str pointer. This
 							; sets the zero flag, so needs to be done

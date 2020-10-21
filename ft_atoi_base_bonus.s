@@ -67,10 +67,10 @@ section .text
 			xor		rdi, rdi
 
 		whitespace:
-			mov		dl, byte [r14]
+			mov		dil, byte [r14]
 			call	_ft_isspace
 			inc		r14
-			cmp		rax, 0
+			cmp		eax, 0
 			jne		whitespace
 			dec		r14
 			mov		rcx, 1
