@@ -404,8 +404,8 @@ My second branch-free function. xD
 						; code).
 
 	add		ecx, 2			; Increase ecx by 1 to add the NULL, and another to
-							; add 1 more to counter so the counter will be at
-							; 0 after the NULL char is checked. :)
+						; add 1 more to counter so the counter will be at
+						; 0 after the NULL char is checked. :)
 
 	cld					; Clear direction flag so we increment strings.
 
