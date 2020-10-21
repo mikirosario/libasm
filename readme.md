@@ -666,6 +666,7 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 							; save it to nice, loyal r12, instead. ^_^
 
 			xor		rdi, rdi	; Let's clean up rdi.
+			xor		rax, rax
 
 		whitespace:				; We need to skip any whitespace at the
 							; beginning of the number string. Remember
@@ -765,12 +766,21 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 			cmovge		r13, rcx	; If greater than or equal to 0, r13 is 1.
 							; Now we can just multiply it by the result
 							; to get our sign back. Woohoo!
+			xor			rax, rax
 
 		atoi:					; The main event! We'll use strchr to see
 							; which number each symbol of the base
 							; corresponds to, based on its position in
 							; the string. Position 0 == 0, position 1 ==
-							; 1, etc. 
+							; 1, etc.
+
+			cmp		[r14], 0	; So! Very important thing to do that caused me a
+								; bug. Of course, we want to know if our number
+								; pointer is actually pointing at anything... if
+								; it's pointing at a null... well... we'll
+								; probably want to leave. xD
+
+			je		return		; Yeah... oops. ;)
 
 			xor		rsi, rsi	; Let's clear rsi. It's good hygiene.
 

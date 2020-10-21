@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/21 22:33:54 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/22 01:18:43 by miki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ void	errorcheck(int returnvalue)
 ** can break them, you can probably break one or more of my bonus functions. :)
 **
 ** Don't be shy! If I have bugs, I deserve it! xD
+**
+** Note that printf should be tolerant of being passed a null string pointer and
+** behave by printing (null), but my Linux compiler is not. ;) It thinks it's
+** pretty clever and seems to detect that this will happen and throws an error
+** over it with -Werror enabled. Hence, when running this on Linux, instead of
+** sending the null to printf as a string type, I send it as a pointer address
+** type, so it prints (nil) and the Linux compiler quits bothering me. ;)
 */
 
 void	bonusdependencytest(void)
@@ -88,7 +95,11 @@ void	bonusdependencytest(void)
 	printf("C's Strchr: %s\n", strchr("find", 'n'));
 	printf("C's Strchr: %s\n", strchr("find", 'd'));
 	printf("C's Strchr: %s\n", strchr("find", '\0'));
+	#ifdef __APPLE__
 	printf("C's Strchr: %s \n", strchr("find", 'p'));
+	#else
+	printf("C's Strchr: %p \n", strchr("find", 'p'));
+	#endif
 	write(1, RESET, sizeof(RESET));
 }
 
@@ -103,13 +114,13 @@ void	atoitest(void)
 	printf("My Ft_atoi_base: %d\n", ft_atoi_base("--++-+-2147483648basurilla", "0123456789"));
 	printf("My Ft_atoi_base: %d\n", ft_atoi_base("ff", "0123456789abcdef"));
 	printf("My Ft_atoi_base: %d\n", ft_atoi_base("  \t\n\r\v\f  42", "0123456789")); // bugged
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("-0", "0123456789")); // bugged
+	printf("My Ft_atoi_base: %d\n", ft_atoi_base("-0", "0123456789"));
 	printf("My Ft_atoi_base: %d\n", ft_atoi_base("    +42", "0123456789")); // bugged
 	printf("My Ft_atoi_base: %d\n", ft_atoi_base("42FINIS !", "0123456789"));
 	printf("My Ft_atoi_base: %d\n", ft_atoi_base("-42FINIS !", "0123456789"));
 	printf("My Ft_atoi_base: %d\n", ft_atoi_base("blbla42", "0123456789"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("0", "0123456789")); // bugged
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("1", "0123456789")); // bugged
+	printf("My Ft_atoi_base: %d\n", ft_atoi_base("0", "0123456789"));
+	printf("My Ft_atoi_base: %d\n", ft_atoi_base("1", "0123456789"));
 	write(1, RESET, sizeof(RESET));
 }
 

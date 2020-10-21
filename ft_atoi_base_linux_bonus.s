@@ -91,8 +91,11 @@ section .text
 			cmp		r13, 0
 			cmovl	r13, rdx
 			cmovge	r13, rcx
+			xor		rax, rax
 
 		atoi:
+			cmp		byte [r14], 0
+			je		return
 			xor		rsi, rsi
 			mov		rdi, r15
 			mov		sil, byte [r14]
