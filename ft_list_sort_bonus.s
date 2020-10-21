@@ -1,5 +1,4 @@
 global _ft_list_sort
-extern _ft_strcmp
 
 ;			void		ft_list_sort(t_list **begin_list, int (*cmp)())
 ; rdi **begin_list
@@ -8,8 +7,11 @@ extern _ft_strcmp
 section .text
 	_ft_list_sort:
 		nullcheck:
-			push	r12					; Por favor Mac, dejame un preservado
-			push	rdi					; Save **begin_list to stack
+			push	r15					; Por favor Mac, dejame un preservado
+			push	r14
+			push	r13
+			mov		r15, rdi			; r15 = **begin_list
+			mov		r14, rsi			; r14 = func pointer
 			xor		rax, rax			; rax = 0
 			cmp		qword [rdi], 0 		; *begin_list?
 			je		return				; If no, return
@@ -18,32 +20,34 @@ section .text
 			je		return				; If no, return
 			mov		rsi, [rdi + 8]		; rsi = *begin_list->next
 			mov		rsi, [rsi]			; rsi = *begin_list->next-data
-			mov		r12, rdi			; Save *begin_list to r12
-			mov		rdi, [rdi]			; rdi = *begin_list->data
-			mov		r11, rsi			; move pointer to function to r11
+			mov		r13, rdi			; r13 = *begin_list
 			jmp		datacmploop
 		
-		swap: ; If we're here, rsi == func pointer and *begin_list is at top of stack
-			mov		
+		swap: ; If we're here, rdi == lst and rsi == lst->next
+			mov		rcx, [rdi]			; Save lst-data to rcx as temp pointer
+			mov		rax, [rsi]			; Pass lst->next->data to rax register
+			mov		qword [rdi], rax	; lst->data = lst->next->data
+			mov		qword [rsi], rcx	; lst->next->data = lst->data
+			mov		r13, [r15]			; r13 = *begin_list
 
-		datacmploop: ; If we're here, rdi == lst->data and rsi == lst->next->data
-			cmp		qword [rcx + 8], 0	; If *begin_list->next is NULL, return
-			je		return
-			push	rcx					; Push *begin_list back onto stack
-			push	r11					; Save pointer to function to stack
-			mov		rdi, [rcx]			; rdi = *begin_list->data
-			mov		rsi, [rcx + 8]		; rsi = *begin_list->next
-			mov		rsi, [rsi]			; rsi = rsi->data (*begin_list->next->data)
-			push	rdi					; Save lst->data to stack
-			push	rsi					; Save lst->next->data to stack
-			call	r11					; Call function (ft_strcmp)
-			pop		rsi					; Pop lst->next->data back to rsi
-			pop		rdi					; Pop lst->data back to rdi
-			pop		r11					; Pop pointer to function back to r11
-			cmp		eax, 0				; Is result positive? (*begin_list->data > *begin_list->next->data?)
-			jg		swap				; Swap datas
-										; Else lst = lst->next
+		datacmploop: ; If we're here, r13 == lst. Other pointers are derived from this.
+			cmp		qword [r13 + 8], 0	; If *lst->next is NULL, return
+			je		return				; If list->next is NULL all datas are ordered
+			xor		rax, rax			; Clean rax
+			mov		rdi, r13			; rdi = lst
+			mov		rsi, [rdi + 8]		; rsi = lst->next == *(rdi + 8)
+			mov		rsi, [rsi]			; rsi = lst->next->data == rsi->data == *rsi
+			mov		rdi, [rdi]			; rdi = lst->data
+			call	r14					; Call function (ft_strcmp)
+			mov		rdi, r13			; rdi = lst
+			mov		rsi, [rdi + 8]		; rsi = lst->next == *(rdi + 8)
+			cmp		eax, 0				; Is result positive? (lst->data > lst->next->data?)
+			jg		swap				; If greater, swap datas
+			mov		r13, rsi			; Else lst = lst->next
+			jmp		datacmploop
+
 		return:
-			pop		rdi					; Pop **begin_list from stack
-			pop		r12
+			pop		r13
+			pop		r14
+			pop		r15
 			ret
