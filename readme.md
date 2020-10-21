@@ -403,7 +403,9 @@ My second branch-free function. xD
 						; OK, even though it's an int, we're passing ASCII
 						; code).
 
-	add		ecx, 1			; Increase ecx by 1 to add the NULL.
+	add		ecx, 2			; Increase ecx by 1 to add the NULL, and another to
+							; add 1 more to counter so the counter will be at
+							; 0 after the NULL char is checked. :)
 
 	cld					; Clear direction flag so we increment strings.
 

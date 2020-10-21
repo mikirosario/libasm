@@ -6,7 +6,7 @@
 #    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/21 19:59:14 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/21 21:35:25 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRC = ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s
 
 BSRC = ft_isspace_bonus.s ft_strchr_bonus.s ft_atoi_base_bonus.s \
 ft_create_elem_bonus.s ft_list_push_front_bonus.s ft_list_size_bonus.s \
-ft_list_sort_bonus.s
+ft_list_sort_bonus.s ft_del_bonus.s ft_list_remove_if_bonus.s
 
 LSRC = ft_strlen_linux.s ft_write_linux.s ft_read_linux.s ft_strcmp_linux.s \
 ft_strcpy_linux.s ft_strdup_linux.s ft_list_sort_linux_bonus.s

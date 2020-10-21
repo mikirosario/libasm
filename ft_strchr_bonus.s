@@ -12,7 +12,7 @@ section .text
 	pop		rdi
 	mov 	ecx, eax
 	mov		eax, esi
-	add		ecx, 1
+	add		ecx, 2
 	cld
 	repne	scasb
 	dec 	rdi
