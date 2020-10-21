@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
+#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/20 22:50:15 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/21 03:14:31 by miki             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ ft_create_elem_bonus.s ft_list_push_front_bonus.s ft_list_size_bonus.s \
 # ft_list_sort_bonus.s
 
 LSRC = ft_strlen_linux.s ft_write_linux.s ft_read_linux.s ft_strcmp_linux.s \
-ft_strcpy_linux.s ft_strdup_linux.s
+ft_strcpy_linux.s ft_strdup_linux.s ft_list_sort_linux_bonus.s
 
 LBSRC = ft_isspace_linux_bonus.s ft_strchr_linux_bonus.s ft_atoi_base_linux_bonus.s \
 ft_create_elem_linux_bonus.s ft_list_push_front_linux_bonus.s ft_list_size_linux_bonus.s
@@ -39,7 +39,7 @@ BOBJ = $(BSRC:.s=.o)
 endif
 	
 ifeq ($(UNAME), Linux)
-FLAGS = -o $(TEST) -Wall -Werror -Wextra -no-pie
+FLAGS = -o $(TEST) -Wall -Werror -Wextra -no-pie -g
 OBJ = $(LSRC:.s=.o)
 BOBJ = $(LBSRC:.s=.o)
 %.o: %.s

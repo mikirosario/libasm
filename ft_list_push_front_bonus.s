@@ -19,9 +19,11 @@ section .text
 		cmp		rax, 0	; Un poquiño de seguridad, par diez.
 		je		return
 		cmp		qword [rdi], 0 ; Does *begin_list exist?
-		je		return	; If zero flag, then it does not exist
+		je		assignptr	; If zero flag, then it does not exist
 		mov		rcx, [rdi]
 		mov		[rax + 8], rcx
+
+	assignptr
 		mov		[rdi], rax
 
 	return:
