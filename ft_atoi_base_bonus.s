@@ -92,7 +92,7 @@ section .text
 			cmovge	r13, rcx
 
 		atoi:
-			cmp		[r14], 0
+			cmp		byte [r14], 0
 			je		return
 			xor		rsi, rsi
 			mov		rdi, r15

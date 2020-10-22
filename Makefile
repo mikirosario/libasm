@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
+#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/21 23:58:28 by miki             ###   ########.fr        #
+#    Updated: 2020/10/22 22:17:13 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,13 +56,13 @@ $(NAME): $(OBJ)
 	# make -C ./libft
 	# make clean -C ./libft
 	# gcc $(FLAGS) -o $(TEST) main.c -I ./libft/ -L ./libft/ -lft -L ./ -lasm
-	gcc $(FLAGS) -o $(TEST) main.c -L ./ -lasm
+	gcc -I ./ $(FLAGS) -o $(TEST) main.c -L ./ -lasm
 
 #ld -macosx_version_min 10.14.5 -no_pie -o test $(OBJ) -lSystem
 
 bonus: $(OBJ) $(BOBJ)
 	ar rcs $(NAME) $(OBJ) $(BOBJ)
-	gcc $(FLAGS) -o $(TEST) main_bonus.c -L ./ -lasm
+	gcc -I ./ $(FLAGS) -o $(TEST) main_bonus.c -L ./ -lasm
 
 all: $(NAME)
 

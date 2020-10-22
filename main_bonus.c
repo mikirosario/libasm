@@ -3,55 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/22 01:18:43 by miki             ###   ########.fr       */
+/*   Updated: 2020/10/22 22:56:19 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "./libft/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
-#include <ctype.h>
-#include <string.h>
+#include "libasm.h"
 
-# define BLUE "\033[1;34m"
-# define GREEN "\033[0;32m"
-# define RESET "\033[0m"
-
-typedef struct		s_list
- {
-	 void			*data;
-	 struct	s_list	*next;
- }					t_list;
-
-size_t	ft_strlen(const char *str);
-char	*ft_strdup(const char *s1);
-ssize_t	ft_write(int fd, const void *buf, size_t nbyte);
-ssize_t ft_read(int fd, void *buf, size_t count);
-int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcpy(char *dst, const char *src);
-int		ft_isspace(int c);
-char	*ft_strchr(char const *s, int c);
-int		ft_atoi_base(char *str, char *base);
-t_list	*ft_create_elem(void *data);
-void	ft_list_push_front(t_list **begin_list, void *data);
-int		ft_list_size(t_list *begin_list );
-void	ft_list_sort(t_list **begin_list, int (*cmp)());
-void	ft_del(void	**freeme);
-void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void(*free_fct)(void *));
-
-void	errorcheck(int returnvalue)
+void	freelist(t_list *list)
 {
-	if (returnvalue < 0)
+	t_list	*tmp;
+
+	while (list)
+	{	
+		tmp = list->next;
+		ft_del((void *)&list);
+		list = tmp;
+	}
+}
+
+void	freecontent(t_list *list)
+{
+	while (list)
 	{
-		printf("C'S Errno: %d\n", errno);
-		perror("\0");
+		if (list->data)
+		{
+			free(list->data);
+			list->data = NULL;
+		}
+		list = list->next;
+	}
+}
+
+void	printlist(t_list *list)
+{
+	while (list)
+	{
+		if (list->data)
+			printf("%s", (char *)list->data);
+		list = list->next;
 	}
 }
 
@@ -104,98 +96,158 @@ void	bonusdependencytest(void)
 }
 
 /*
-** Here are some ATOI tests. :)
+** Here are some ATOI tests. Feel free to request more. :) Note that this ATOI
+** follows the piscine rules, so it is protected against bad bases, but not
+** against null strings passed as argument which is undefined. We can refer to
+** piscine subject C04, Ex05, with reference to Ex03 for some functionality.
+**
+** Aside from dealing with underflows and overflows (although, from my testing
+** it seems that both my and C's atoi deal with overflows the same way anyway,
+** we calculate the int as an absolute and tack on the sign after, even if this
+** changes the actual value of the number in the process), and handling multiple
+** signs and bases, the atoi functionality is the same as the C atoi. C atoi
+** segfaults if you send it a null pointer, so mine does as well for null
+** pointers.
+**
+** The first several tests are basic decimal conversions compared against C's
+** ATOI - of course for mine we must specify the decimal base, but otherwise
+** it's equivalent.
+**
+** For the other stuff that C's ATOI doesn't do, I just do my tests. I mean,
+** it's kind of like strtol, but still different. Numbers can be checked online
+** at any nBase - Decimal conversion webpage. Note that binary is a straight
+** conversion, not two's complement or anything. So -1 is just -01, etc. So make
+** sure the nBase - Decimal conversion you check against is not a two's
+** complement system.
 */
 
 void	atoitest(void)
 {
 	write(1, GREEN, sizeof(GREEN));
-	printf("\n\nMy Ft_atoi_base: %d\n", ft_atoi_base("--++-+11010100010101basurilla", "01"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("--++-+-2147483648basurilla", "0123456789"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("ff", "0123456789abcdef"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("  \t\n\r\v\f  42", "0123456789")); // bugged
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("-0", "0123456789"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("    +42", "0123456789")); // bugged
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("42FINIS !", "0123456789"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("-42FINIS !", "0123456789"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("blbla42", "0123456789"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("0", "0123456789"));
-	printf("My Ft_atoi_base: %d\n", ft_atoi_base("1", "0123456789"));
+	printf("\n\nFT_ATOI/ATOI COMPARE\n");
+	printf("ft_atoi_base\t(\"  \\t-42\", \"0123456789\")\t\t\t %d\n", ft_atoi_base("  \t-42", "0123456789"));
+	printf(BLUE"atoi\t\t(\"  \\t-42\")\t\t\t\t\t %d\n"GREEN, atoi("  \t-42"));
+	printf("ft_atoi_base\t(\"  \\t\\n\\r\\v\\f  42\", \"0123456789\")\t\t %d\n", ft_atoi_base("  \t\n\r\v\f  42", "0123456789"));
+	printf(BLUE"atoi\t\t(\"  \\t\\n\\r\\v\\f  42\")\t\t\t\t %d\n"GREEN, atoi("  \t\n\r\v\f  42"));
+	printf("ft_atoi_base\t(\"    +42\", \"0123456789\")\t\t\t %d\n", ft_atoi_base("    +42", "0123456789"));
+	printf(BLUE"atoi\t\t(\"    +42\")\t\t\t\t\t %d\n"GREEN, atoi("    +42"));
+	printf("ft_atoi_base\t(\" \\n\\v\\f -0\", \"0123456789\")\t\t\t %d\n", ft_atoi_base(" \n\v\f -0", "0123456789"));
+	printf(BLUE"atoi\t\t(\" \\n\\v\\f -0\")\t\t\t\t\t %d\n"GREEN, atoi(" \n\v\f -0"));
+	printf("ft_atoi_base\t(\"0\", \"0123456789\")\t\t\t\t %d\n", ft_atoi_base("0", "0123456789"));
+	printf(BLUE"atoi\t\t(\"0\")\t\t\t\t\t\t %d\n"GREEN, atoi("0"));
+	printf("ft_atoi_base\t(\"1\", \"0123456789\")\t\t\t\t %d\n", ft_atoi_base("1", "0123456789"));
+	printf(BLUE"atoi\t\t(\"1\")\t\t\t\t\t\t %d\n"GREEN, atoi("1"));
+	printf("ft_atoi_base\t(\"-2147483648basurilla\", \"0123456789\")\t\t %d\n", ft_atoi_base("-2147483648basurilla", "0123456789"));
+	printf(BLUE"atoi\t\t(\"-2147483648basurilla\")\t\t\t %d\n"GREEN, atoi("-2147483648basurilla"));
+	printf("ft_atoi_base\t(\"-2147483647basurilla\", \"0123456789\")\t\t %d\n", ft_atoi_base("2147483647basurilla", "0123456789"));
+	printf(BLUE"atoi\t\t(\"-2147483647basurilla\")\t\t\t %d\n"GREEN, atoi("2147483647basurilla"));
+	printf("\nFT_ATOI BASE CONVERSIONS\n");
+	printf("ft_atoi_base\t(\"--++-+11010100010101basurilla\", \"01\")\t\t %d\n", ft_atoi_base("--++-+11010100010101basurilla", "01"));
+	printf("ft_atoi_base\t(\"--++-+-2147483648basurilla\", \"0123456789\")\t %d\n", ft_atoi_base("--++-+-2147483648basurilla", "0123456789"));
+	printf("ft_atoi_base\t(\"ff\", \"0123456789abcdef\")\t\t\t %d\n", ft_atoi_base("ff", "0123456789abcdef"));
+	printf("ft_atoi_base\t(\"1411\", \"01234567\")\t\t\t\t %d\n", ft_atoi_base("1411", "01234567"));
+	printf("ft_atoi_base\t(\"4242\", \"01234\")\t\t\t\t %d\n", ft_atoi_base("4242", "01234"));
+	printf("\nFT_ATOI INVALID NUMBERS\n");
+	printf("ft_atoi_base\t(\"blbla42\", \"0123456789\")\t\t\t %d\n", ft_atoi_base("blbla42", "0123456789"));
+	printf("\nFT_ATOI INVALID BASES\n");
+	printf("ft_atoi_base\t(\"42\", \"\\0\")\t\t\t\t\t %d\n", ft_atoi_base("42", "\0"));
+	printf("ft_atoi_base\t(\"42\", \"1\")\t\t\t\t\t %d\n", ft_atoi_base("42", "1"));
+	printf("ft_atoi_base\t(\"42\", \"0123+\")\t\t\t\t\t %d\n", ft_atoi_base("42", "0123+"));
+	printf("ft_atoi_base\t(\"42\", \"01-34\")\t\t\t\t\t %d\n", ft_atoi_base("42", "01-34"));
+	printf("ft_atoi_base\t(\"42\", \" 01234\")\t\t\t\t %d\n", ft_atoi_base("42", " 01234"));
+	printf("ft_atoi_base\t(\"42\", \"0123\")\t\t\t\t\t %d\n", ft_atoi_base("42", "0123"));
+	//printf(BLUE"C's atoi: %d\n"GREEN, atoi(NULL));
+	//printf("My Ft_atoi_base: %d\n", ft_atoi_base(NULL, "0123456789"));
+	//printf("My Ft_atoi_base: %d\n", ft_atoi_base("1", NULL));
 	write(1, RESET, sizeof(RESET));
 }
 
+/*
+** Creates a simple list, with two members and two datasets, one per member,
+** prints the results, and frees the list. The datasets are defined in the
+** arguments.
+*/
+
+void	pushfronttest(char *data, char *masdata)
+{
+	t_list	*list;
+	t_list	*begin_list;
+
+	list = ft_create_elem(masdata);
+	begin_list = list;
+	ft_list_push_front(&list, data);
+	while(list)
+	{
+		printf(GREEN"\nMy Linked List: %s "RESET, (char *)list->data);
+		list = list->next;
+	}
+	freelist(begin_list);
+}
+
+/*
+** Creates a 64-member list consisting of all the letters of the alphabet in
+** lower case and upper case in the order they appear on a QWERTY keyboard, and
+** the numbers 0 - 9 in jumbled order. This will be to test the list size, the
+** the sorting function, and the remove_if function.
+*/
+
+t_list	*createalphabetlist(char *qwerty[])
+	{
+		t_list	*list;
+		char 	alphabet[] = {"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM9382764501"};
+		int		i;
+
+		i = 0;
+		list = NULL;
+		while (i < 64)
+		{
+			qwerty[i] = malloc(2);
+			qwerty[i][0] = alphabet[i];
+			qwerty[i][1] = 0;
+			i++;
+		}
+		i = 63;
+		while (i >= 0)
+		{
+			ft_list_push_front(&list, qwerty[i]);
+			i--;
+		}
+		return (list);
+	}
+
+void	listsorttest(t_list *list)
+{
+	printf(GREEN"\nINITIAL LIST ORDER:\n");
+	printlist(list);
+	ft_list_sort(&list, ft_strcmp);
+	printf("\nSORTED LIST ORDER:\n");
+	printlist(list);
+	printf("\n"RESET);
+}
+
+void	listremoveiftest(t_list *list, char *remove)
+{
+	printf(GREEN"REMOVE APPLIED:\n");
+	ft_list_remove_if(&list, remove, ft_strcmp, free);
+	printlist(list);
+	printf("\n"RESET);
+}
 
 int	main(void)
 {
-	char data[] = {"Canario"};
-	char masdata[] = {"Estepario"};
-	char alphabet[] = {"qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM9382764501"};
-	char *qwerty[64];
-	int i;
-	
+	char	*qwerty[64];
 	t_list	*list;
-	t_list	*tmp;
+
 	ft_write(1, "\n", 1);
 	bonusdependencytest();
 	atoitest();
-	//list = ft_create_elem(masdata);
-	list = ft_create_elem(masdata);
-	ft_list_push_front(&list, data);
-	printf("\n\nMy Linked List: %s, %s\n", (char *)list->data, (char *)list->next->data);
-	printf("\n\nMy List Length: %d\n", ft_list_size(list));
-	write(1, RESET, sizeof(RESET));
-	printf("\nTEST\n");
-	while (list)
-	{	
-		tmp = list->next;
-		ft_del((void *)&list);
-		list = tmp;
-	}
-	i = 0;
-	while (i < 64)
-	{
-		qwerty[i] = malloc(2);
-		qwerty[i][0] = alphabet[i];
-		qwerty[i][1] = 0;
-		i++;
-	}
-	i = 63;
-	while (i >= 0)
-	{
-		ft_list_push_front(&list, qwerty[i]);
-		i--;
-	}
-	printf("\nCurrent List Order:\n");
-	tmp = list;
-	while (tmp)
-	{
-		printf("%s", (char *)tmp->data);
-		tmp = tmp->next;
-	}
-	ft_list_sort(&list, ft_strcmp);
-	ft_list_remove_if(&list, "0", ft_strcmp, free);
-	printf("\nSorted List Order:\n");
-	tmp = list;
-	while (tmp)
-	{
-		if (tmp->data)
-			printf("%s", (char *)tmp->data);
-		tmp = tmp->next;
-	}
-	printf("\n");
-	i = 0;
-	tmp = list;
-	while (tmp)
-	{
-		if (tmp->data)
-			free(tmp->data);
-		tmp = tmp->next;
-	}
-	while (list)
-	{
-		tmp = list->next;
-		free(list);
-		list = tmp;
-	}
+	pushfronttest("Canario", "Estepario");
+	list = createalphabetlist(qwerty);
+	printf(GREEN"\n\nMy List Length: %d\n"RESET, ft_list_size(list));
+	listsorttest(list);
+	listremoveiftest(list, "0");
+	freecontent(list);
+	freelist(list);
+	//system("leaks a.out"); // 1 16-byte leak, definitely a struct member...
 	return (0);
 }
