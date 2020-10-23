@@ -6,10 +6,14 @@
 /*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 22:17:46 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/22 22:53:01 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/23 22:34:39 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef LIBASM_H
+# define LIBASM_H
+
+#include "atoitests.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -63,4 +67,9 @@ void	ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void(*
 ** Test Functions
 */
 
-void	atoitest(void);
+void	atoicompare(void);
+void	atoibaseconversions(void);
+void	invalidnumber(void);
+void	invalidbases(void);
+
+#endif

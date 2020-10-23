@@ -6,7 +6,7 @@
 #    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/22 22:17:13 by mrosario         ###   ########.fr        #
+#    Updated: 2020/10/23 20:41:49 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ SRC = ft_strlen.s ft_write.s ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s
 BSRC = ft_isspace_bonus.s ft_strchr_bonus.s ft_atoi_base_bonus.s \
 ft_create_elem_bonus.s ft_list_push_front_bonus.s ft_list_size_bonus.s \
 ft_list_sort_bonus.s ft_del_bonus.s ft_list_remove_if_bonus.s
+
+BCSRC = atoitests.c
 
 LSRC = ft_strlen_linux.s ft_write_linux.s ft_read_linux.s ft_strcmp_linux.s \
 ft_strcpy_linux.s ft_strdup_linux.s
@@ -62,7 +64,7 @@ $(NAME): $(OBJ)
 
 bonus: $(OBJ) $(BOBJ)
 	ar rcs $(NAME) $(OBJ) $(BOBJ)
-	gcc -I ./ $(FLAGS) -o $(TEST) main_bonus.c -L ./ -lasm
+	gcc -I ./ $(FLAGS) -o $(TEST) $(BCSRC) main_bonus.c -L ./ -lasm
 
 all: $(NAME)
 
