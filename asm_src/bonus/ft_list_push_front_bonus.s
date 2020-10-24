@@ -23,7 +23,7 @@ section .text
 		mov		rcx, [rdi]
 		mov		[rax + 8], rcx
 
-	assignptr
+	assignptr:
 		mov		[rdi], rax
 
 	return:
