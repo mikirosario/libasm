@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: miki <miki@student.42.fr>                  +#+  +:+       +#+         #
+#    By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/03 20:53:32 by mrosario          #+#    #+#              #
-#    Updated: 2020/10/24 16:52:52 by miki             ###   ########.fr        #
+#    Updated: 2020/10/24 18:39:52 by mrosario         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ ft_list_sort_linux_bonus.s ft_del_linux_bonus.s ft_list_remove_if_linux_bonus.s
 ifeq ($(UNAME), Darwin)
 FLAGS = -I ./Includes/ -o $(TEST) -Wall -Werror -Wextra
 OBJ = $(addprefix ./asm_src/,$(SRC:.s=.o))
-BOBJ = $(addprefix ./asm_src/bonus/,$(BSRC:.s=.o)
+BOBJ = $(addprefix ./asm_src/bonus/,$(BSRC:.s=.o))
 %.o: %.s
 	nasm -f macho64 $<
 endif
@@ -60,7 +60,8 @@ bonus: $(OBJ) $(BOBJ)
 all: $(NAME)
 
 clean:
-	rm -f *.o
+	rm -f ./asm_src/*.o
+	rm -f ./asm_src/bonus/*.o
 
 fclean: clean
 	rm -f $(NAME) $(TEST)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/24 16:05:25 by miki             ###   ########.fr       */
+/*   Updated: 2020/10/24 18:36:50 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,13 @@ int		main(void)
 	teststrcmp("TEST", "Tost");
 	teststrcpy(mydst, cdst, "Nivram");
 	teststrdup("¡Albricias!");
+	printf("\n");
 	free(mydst);
 	free(cdst);
 	mydst = NULL;
 	cdst = NULL;
+#ifdef __APPLE__
+	system("leaks test.out");
+#endif
 	return (0);
 }

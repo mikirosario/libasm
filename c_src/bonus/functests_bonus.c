@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   functests_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 12:52:46 by miki              #+#    #+#             */
-/*   Updated: 2020/10/24 16:42:30 by miki             ###   ########.fr       */
+/*   Updated: 2020/10/24 18:34:56 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,5 +129,5 @@ void	listremoveiftest(t_list *list, void *remove)
 	ft_list_remove_if(&list, remove, ft_strcmp, free);
 	printf(GREEN);
 	printlist(list);
-	printf("\n"RESET);
+	printf(RESET"\n\n");
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 21:34:11 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/24 16:15:47 by miki             ###   ########.fr       */
+/*   Updated: 2020/10/24 18:35:13 by mrosario         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,7 @@ int		main(void)
 	freecontent(list);
 	freelist(list);
 #ifdef __APPLE__
-	system("leaks a.out");
+	system("leaks test.out");
 #endif
-	write(1, "\n", 1);
 	return (0);
 }
