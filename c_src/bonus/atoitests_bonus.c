@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   atoitests.c                                        :+:      :+:    :+:   */
+/*   atoitests_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrosario <mrosario@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miki <miki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/22 22:49:31 by mrosario          #+#    #+#             */
-/*   Updated: 2020/10/23 22:42:51 by mrosario         ###   ########.fr       */
+/*   Updated: 2020/10/24 16:43:02 by miki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libasm.h"
+#include "libasm_bonus.h"
 
 /*
 ** This compare function call the numbers defined in atoitests.h to pass as
@@ -38,24 +38,22 @@
 
 void	atoicompare(void)
 {
-	write(1, GREEN, sizeof(GREEN));
-	printf("\n\nFT_ATOI/ATOI COMPARE\n");
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST1, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST1));
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST2, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST2));
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST3, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST3));
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST4, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST4));
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST5, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST5));
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST6, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST6));
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST7, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST7));
-	printf("ft_atoi_base:\t %d\n", ft_atoi_base(TEST8, "0123456789"));
-	printf(BLUE"atoi:\t\t %d\n"GREEN, atoi(TEST8));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST1, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n", atoi(TEST1));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST2, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n", atoi(TEST2));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST3, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n", atoi(TEST3));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST4, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n", atoi(TEST4));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST5, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n", atoi(TEST5));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST6, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n", atoi(TEST6));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST7, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n", atoi(TEST7));
+	printf(GREEN"ft_atoi_base:\t %d\n", ft_atoi_base(TEST8, "0123456789"));
+	printf(BLUE"atoi:\t\t %d\n"RESET, atoi(TEST8));
 }
 
 /*
@@ -68,11 +66,13 @@ void	atoicompare(void)
 
 void	atoibaseconversions(void)
 {
+	write(1, GREEN, sizeof(GREEN));
 	printf("Base 2:\t\t %d\n", ft_atoi_base(TEST9, "01"));
 	printf("Base 10:\t %d\n", ft_atoi_base(TEST10, "0123456789"));
 	printf("Base 16:\t %d\n", ft_atoi_base(TEST11, "0123456789abcdef"));
 	printf("Base 8:\t\t %d\n", ft_atoi_base(TEST12, "01234567"));
 	printf("Base 5:\t\t %d\n", ft_atoi_base(TEST13, "01234"));
+	write(1, RESET, sizeof(RESET));
 }
 
 /*
@@ -81,7 +81,9 @@ void	atoibaseconversions(void)
 
 void	invalidnumber(void)
 {
+	write(1, GREEN, sizeof(GREEN));
 	printf("Invalid Number:\t %d\n", ft_atoi_base(TEST14, "0123456789"));
+	write(1, RESET, sizeof(RESET));
 }
 
 /*
@@ -95,10 +97,12 @@ void	invalidnumber(void)
 
 void	invalidbases(void)
 {
+	write(1, GREEN, sizeof(GREEN));
 	printf("Base is \'\\0\':\t %d\n", ft_atoi_base("42", TEST15));
 	printf("Base is \'1\':\t %d\n", ft_atoi_base("42", TEST16));
 	printf("Base has \'+\':\t %d\n", ft_atoi_base("42", TEST17));
 	printf("Base has \'-\':\t %d\n", ft_atoi_base("42", TEST18));
 	printf("Base has \' \':\t %d\n", ft_atoi_base("42", TEST19));
 	printf("Missing symbol:\t %d\n", ft_atoi_base("42", TEST20));
+	write(1, RESET, sizeof(RESET));
 }
