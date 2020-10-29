@@ -864,3 +864,279 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 			ret				; If I never see another atoi for as long
 							; as I live, it will be too soon! Back to
 							; you, caller.
+
+FT_LIST_SORT
+This function will compare all datasets in the a t_list struct list against each other and reorder
+them from lowest to highest numerically. In my test I demonstrate this with a list of character
+strings each containing one letter of the alphabet (lower and upper case) or one digit (0-9),
+which are then reordered within the list in ascending ASCII order, but this function will, of
+course, reorder datasets of any 'type'. Indeed, since completing the Assembly Library project,
+I feel compelled to always put 'type' in quotes lest I forget that they're mere abstractions or
+categorizations of the same underlying 1s and 0s that we can and will order at our leisure, no
+matter how they identify. ;p
+
+The function is passed a pointer to a pointer to the first member of the list and a pointer to
+a function that we assume to be ft_strcmp.
+
+
+	_ft_list_sort:
+		nullcheck:						; Step one will be to check the
+									; passed arguments for nullity.
+
+			push	r15					; Can a brother get a preserved
+									; register or three? We push these
+									; preserved registers to the stack
+									; so we can use them for our
+									; nefarious plans.
+
+			push	r14
+
+			push	r13
+
+			mov		r15, rdi			; r15 = begin_list
+
+			mov		r14, rsi			; r14 = function pointer
+
+			xor		rax, rax			; Set rax to 0.
+
+			cmp		qword [rdi], 0 			; Dereference the double pointer
+									; to look at the pointer it is
+									; pointing to (the pointer to the
+									; first member of the list), which
+									; like all pointers on a 64 bit
+									; machine, will be a qword, and
+									; compare that pointer to 0 (that
+									; is, subtract 0 from it, and set
+									; flags accordingly).
+
+			je		return				; If the zero flag is set after
+									; the comparison, the list pointer
+									; is NULL. Go directly to return.
+									; Do not pass GO. Do not collect
+									; $200.
+
+			mov		rdi, [rdi] 			; Otherwise, change the value in
+									; rdi from the pointer to the
+									; pointer to the first list member
+									; (begin_list) to the pointer to
+									; the first list member (that is,
+									; *begin_list, or begin_list
+									; dereferenced one level).
+
+			cmp		qword [rdi + 8], 0		; Now we want to know if the
+									; SECOND list member (rdi->next)
+									; is NULL, because if it is... well,
+									; there's not much comparing to be
+									; done, is there!? So dereference
+									; the pointer to the first list
+									; member to go directly to its first
+									; byte...
+									; 
+									; The first variable in the t_list
+									; struct is a pointer (to the
+									; dataset), which is 8 bytes wide.
+									; So we add 8 bytes to the address.
+									; 
+									; The next variable is also a pointer
+									; (to the next t_list member, in the
+									; struct declaration, this is t_list
+									; *next), so it's also 8 bytes wide,
+									; that is, it's a qword. That's our
+									; target, so we grab a qword-sized chunk
+									; of data and subtract 0 from it to
+									; do the compare.
+
+			je		return				; If the zero flag is set, the first
+									; list member's next pointer is NULL.
+									; So there is no second member. So we
+									; return, nothing to see here folks.
+
+			mov		rsi, [rdi + 8]			; Otherwise, we copy the pointer address
+									; to the next list member into rsi. Hmm...
+									; first rdi... then rsi... can you tell
+									; I'm about to call an external function? ;)
+
+			mov		rsi, [rsi]			; Now for the next function I'm going to call,
+									; I'm not interested in the address of the
+									; list member, but rather the address of the
+									; dataset it contains. So I dereference the
+									; address now contained in rsi (which is
+									; *begin_list->next) so I instead get the
+									; address of the first byte of data of the
+									; list member struct it points to (that is,
+									; *begin_list->next->data).
+
+			mov		r13, rdi			; And for good measure, I save the pointer
+									; to the first member of the list (which is
+									; what we still have in rdi) into r13 for
+									; use as an index. That is, r13 = *begin_list.
+
+			jmp		datacmploop			; From here, we jump to the data comparison
+									; loop. We don't go from here to swap!
+		
+		swap: 							; We come here from the datacmploop, not from
+									; the nullcheck! If we're here, then rdi == lst
+									; and rsi == lst->next.
+
+			mov		rcx, [rdi]			; We save lst->data to rcx as temp pointer.
+
+			mov		rax, [rsi]			; Pass lst->next->data to rax register.
+
+			mov		qword [rdi], rax		; Now we copy rax (lst->next->data) into the
+									; memory pointed to by the address in rdi (the
+									; first 8 bytes of the struct are the data addr),
+									; so: lst->data = lst->next->data.
+
+			mov		qword [rsi], rcx		; Now we copy rcx (the temp pointer to lst->data)
+									; into the memory pointer to by the address in rsi
+									; (the first 8 bytes of lst->next are
+									; list->next->data), so: lst->next->data = lst->data.
+									
+			mov		r13, [r15]			; If we had to swap datasets because one with a higher
+									; value came after one with a lower value, we might
+									; also have to swap it with the preceding list member,
+									; who knows? So we want to start the loop again from
+									; the very first member. So our index, r13, = *begin_list,
+									; which, of course, is just r15 (begin_list) dereferenced
+									; once.
+
+		datacmploop: 						; If we're here, r13 == lst. All other pointers are
+									; derived from this simple fact. :)
+
+			cmp		qword [r13 + 8], 0		; If *lst->next is NULL, we have reached the end of
+									; the loop without being diverted into the swap
+									; instruction block and resetting r13 to *begin_list,
+									; so that means our list must be ordered!
+
+			je		return				; If list->next is NULL all datas are ordered, so our
+									; work here is done. Go to return.
+
+			xor		rax, rax			; Clean rax.
+
+			mov		rdi, r13			; The first argument we'll pass to our string compare
+									; function, ft_strcmp, will be the address of lst->data.
+									; First we need the pointer to lst, so rdi = lst.
+
+			mov		rsi, [rdi + 8]			; The second argument we'll pass to our string compare
+									; function is the address of lst->next->data. Since we
+									; have the pointer to lst in rdi, we can dereference it
+									; to go to the struct it points to, and add 8 bytes to
+									; go to the location of the next pointer within that
+									; struct, and then copy the address stored there into
+									; rsi. Thus: rsi = lst->next, or, in other words:
+									; rsi = *(rdi + 8).
+
+			mov		rsi, [rsi]			; Dereference lst->next to get to the first variable in
+									; the list member it points to, which is the address to
+									; its data (lst->next->data), an 8 byte variable, so, a
+									; qword. Move that address into rsi.
+									; 
+									; So, now: rsi = lst->next->data, or, in other words,
+									; rsi = rsi->data
+
+			mov		rdi, [rdi]			; Since we've got rsi set up, we dereference rdi (lst)
+									; to get the first variable in the lst struct, which is
+									; its data pointer. So, now rdi = lst->data.
+
+			call		r14				; We now call the function (ft_strcmp). At the beginning
+									; of the function we saved the function pointer into the
+									; r14 register, so we just call up the instructions at
+									; that address, with our first argument, rdi, being
+									; lst->data, and our second argument, rsi, being
+									; lst->next->data.
+									;
+									; So we're comparing the data in the list member we're
+									; analysing to the data in its neighbour.
+									;
+									; If the compare function finds any difference, it will
+									; return the first difference it finds in rax.
+									; 
+									; If the difference is a positive number, then the second
+									; argument is less than the first. (10 - 5 = 5).
+									;
+									; If the difference is a negative number, then the
+									; second argument is greater than the first (5 - 10 = -5).
+									;
+									; If the difference is 0, then the first and second
+									; arguments are equal.
+									;
+									; If the difference we find is positive (the second
+									; argument is less than the first), then they are
+									; unordered and we need to swap them, as the purpose of
+									; this function is to leave the datasets in ascending order
+									; in the list.
+
+			mov		rdi, r13			; We store the original lst pointer in rdi again. rdi = lst
+
+			mov		rsi, [rdi + 8]			; We store the original lst->next pointer in rsi again.
+									; rsi = lst->next == *(rdi + 8) Now if we need to swap them
+									; we'll be ready.
+
+			cmp		eax, 0				; Is the result positive? (lst->data > lst->next->data?) To
+									; determine this we subtract 0 from eax (which, of course,
+									; will always return eax, but we do this to set the flags).
+									;
+									; The CPU knows something is greater or less than by
+									; checking the zero flag and the overflow and sign flags.
+									;
+									; If the zero flag IS set OR the overflow and sign flags are
+									; NOT the same, then it's equal to (if ZF) or less than (if
+									; (SF != OF).
+									;
+									; If the zero flag is NOT set AND the overflow and sign
+									; flags are the same, then it's greater than.
+									; 
+									; Bit counterintuitive, but it works! Some examples of how:
+									;
+									; For example, let eax be -1, and let's ask:
+									; Is -1 GREATER than 0?
+									;
+									; In Assembly, we say cmp eax, 0:		-1 - 0 == -1.
+									; -1 is not zero, so: 				ZF = 0.
+									; -1 is negative, so: 				SF = 1.
+									; -1 didn't change signs (overflow), so:	OF = 0.
+									; SF != OF, so eax (-1) is less than 0.
+									;
+									; For example, let eax be +1, and let's ask:
+									; Is +1 greater than 0?
+									;
+									; In Assembly, we say cmp eax, 0:		1 - 0 == 1.
+									; 1 is not zero, so:				ZF = 0.
+									; 1 is positive, so: 				SF = 0.
+									; 1 didn't change signs (overflow), so:		OF = 0.
+									; ZF == 0 AND SF == OF, so it MUST be greater than.
+									;
+									; *sigh* I <3 Assembly. ;)
+									;
+									; Finally, we use eax, the 32-bit register here, as ft_strcmp
+									; returns an int (that's four bytes, or 32 bits). We don't
+									; care about the higher bits, although ft_strcmp should clean
+									; tidy them up by zeroing them if it's being properly
+									; behaved ;).
+
+			jg		swap				; If eax is greater than 0 (that is, a positive number), then
+									; jump to the block of swap instructions to swap these
+									; datasets.
+
+			mov		r13, rsi			; If eax is less than or equal to 0, these datasets needn't be
+									; be swapped, so we can move onto the next list member and
+									; continue the compare loop.
+									;
+									; Remember we made rsi lst->next again. Now we want our pointer
+									; index to point to the next list member. So r13, currently
+									; pointing to lst, will be set to lst->next (lst = lst->next).
+
+			jmp		datacmploop			; In that case, no swapping, just jump back to the first
+									; datacmploop instruction.
+
+		return:							; The end! This is a void function, so it doesn't return
+									; anything. All we need to do is restore our reserved registers,
+									; pray to the Gods of Stack Alignment, and be on our way.
+
+			pop		r13				; Restore the preserved registers to their original state.
+
+			pop		r14
+
+			pop		r15
+
+			ret						; Our prayers have been answered!
