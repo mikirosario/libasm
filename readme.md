@@ -867,7 +867,7 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 
 FT_LIST_SORT
 
-This function will compare all datasets in the a t_list struct list against each other and reorder
+This function will compare all datasets in a t_list struct list against each other and reorder
 them from lowest to highest numerically. In my test I demonstrate this with a list of character
 strings each containing one letter of the alphabet (lower and upper case) or one digit (0-9),
 which are then reordered within the list in ascending ASCII order, but this function will, of
