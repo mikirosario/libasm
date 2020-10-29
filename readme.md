@@ -777,10 +777,10 @@ brought to you in Assembly Language! Get comfy, this is going to be a long one.
 							; 1, etc.
 
 			cmp		[r14], 0	; So! Very important thing to do that caused me a
-								; bug. Of course, we want to know if our number
-								; pointer is actually pointing at anything... if
-								; it's pointing at a null... well... we'll
-								; probably want to leave. xD
+							; bug. Of course, we want to know if our number
+							; pointer is actually pointing at anything... if
+							; it's pointing at a null... well... we'll
+							; probably want to leave. xD
 
 			je		return		; Yeah... oops. ;)
 
@@ -878,12 +878,6 @@ matter how they identify. ;p
 
 The function is passed a pointer to a pointer to the first member of the list and a pointer to
 a function that we assume to be ft_strcmp.
-; Next! We move the byte we are checking to
-								; rsi, as this is the second argument of
-								; strchr. That will be pointed to by the
-								; address we're saving in r14, of course!
-								; We move it into the low byte of rsi, which
-								; is called sil.
 
 	_ft_list_sort:
 		nullcheck:					; Step one will be to check the passed
@@ -1105,7 +1099,7 @@ a function that we assume to be ft_strcmp.
 								;
 								; Finally, we use eax, the 32-bit register here, as ft_strcmp
 								; returns an int (that's four bytes, or 32 bits). We don't
-								; care about the higher bits, although ft_strcmp should clean
+								; care about the higher bits, although ft_strcmp should
 								; tidy them up by zeroing them if it's being properly
 								; behaved ;).
 
